@@ -1,6 +1,14 @@
 from flask import Flask, render_template, url_for, redirect
+from models import db, User
+from config import Config
 
 app = Flask(__name__)
+app.config.from_object(Config)
+
+db.init_app(app)
+
+with app.app_context():
+    db.create_all()
 
 @app.route('/')
 def index():

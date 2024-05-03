@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Ashion Template">
+    <meta name="keywords" content="Ashion, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Badelha | بدلها</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Cookie&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Css Styles -->
+    <link rel="stylesheet" href="static/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="static/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="static/css/elegant-icons.css" type="text/css">
+    <link rel="stylesheet" href="static/css/jquery-ui.min.css" type="text/css">
+    <link rel="stylesheet" href="static/css/magnific-popup.css" type="text/css">
+    <link rel="stylesheet" href="static/css/owl.carousel.min.css" type="text/css">
+    <link rel="stylesheet" href="static/css/slicknav.min.css" type="text/css">
+    <link rel="stylesheet" href="static/css/style.css" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+</head>
+
+<body>
+    <!-- Page Preloder -->
+    <div id="preloder">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Offcanvas Menu Begin -->
+    <div class="offcanvas-menu-overlay"></div>
+    <div class="offcanvas-menu-wrapper">
+        <div class="offcanvas__close">+</div>
+        <ul class="offcanvas__widget">
+            <li><span class="icon_search search-switch"></span></li>
+            <li><a href="#"><span class="icon_heart_alt"></span>
+                <div class="tip">2</div>
+            </a></li>
+            <li><a href="#"><span class="icon_bag_alt"></span>
+                <div class="tip">2</div>
+            </a></li>
+        </ul>
+        <div class="offcanvas__logo">
+            <a href="{{ url_for('index') }}"><img src="static/img/favicon.png" alt=""></a>
+        </div>
+        <div id="mobile-menu-wrap"></div>
+    </div>
+    <header class="header">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xl-3 col-lg-2">
+                    <div class="header__logo">
+                        <a href="{{ url_for('index') }}"><img src="#" alt="" >Badelha</a>
+                    </div>
+                </div>
+                <div class="col-xl-6 col-lg-7">
+                    <nav class="header__menu">
+                        <ul>
+                            <li class="active"><a href="{{ url_for('index') }}">Home</a></li>
+                            <li><a href="{{ url_for('product_main') }}">Shop</a>
+                                <ul class="dropdown">
+                                    <li><a href="#">Women’s</a></li>
+                                    <li><a href="#">Men’s</a></li>
+                                    <li><a href="./shop.html">Kid's</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="{{ url_for('contact') }}">Contact</a></li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="col-lg-3">
+                    <div class="header__right">
+                       
+                        <ul class="header__right__widget">
+                            <li><span class="icon_search search-switch"></span></li>
+                            <li><a href="#"><span class="icon_heart_alt"></span>
+                                <div class="tip">2</div>
+                            </a></li>
+                            <li><a href="{{ url_for('cart') }}"><span class="icon_bag_alt"></span>
+                                <div class="tip">2</div>
+                            </a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="canvas__open">
+                <i class="fa fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+
+
+{% block head %}{% endblock %}
+
+    <!-- Footer Section Begin -->
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 col-md-4 col-sm-4">
+                <div class="footer__about">
+                    <div class="footer__logo">
+                        <a href="{{ url_for('index') }}"><img src="static/img/name.png" alt=""></a>
+                    </div>
+                    
+
+                   
+                    <div class="footer__payment">
+                        <a href="#"><img src="img/payment/payment-1.png" alt=""></a>
+                        <a href="#"><img src="img/payment/payment-2.png" alt=""></a>
+                        <a href="#"><img src="img/payment/payment-3.png" alt=""></a>
+                        <a href="#"><img src="img/payment/payment-4.png" alt=""></a>
+                        <a href="#"><img src="img/payment/payment-5.png" alt=""></a>
+                    </div>
+                </div>
+            </div>
+            <div class="row mx-auto">
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                    <h6>links</h6>
+                    <ul>
+                        <li st><a style="color:#000000" href="#">About</a></li>
+                        <li><a  style="color:#000000 " href="#">Contact</a></li>
+                       
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-4 col-sm-4" data-aos="slide-top" data-aos-delay="500">
+                <div class="footer__newslatter">
+                    <h6 style="color: #000000;">Subscribe</h6>
+                    <form action="#">
+                        <input type="text" placeholder="Email">
+                        <button type="submit" class="site-btn">Subscribe</button>
+                    </form>
+                    <div class="footer__social">
+                        <a href="#"><i class="fa fa-facebook"></i></a>
+                        <a href="#"><i class="fa fa-twitter"></i></a>
+                        <a href="#"><i class="fa fa-linkedin"></i></a>
+                        <a href="#"><i class="fa fa-instagram"></i></a>
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="footer__copyright__text">
+                    <p>Copyright &copy; <script>document.write(new Date().getFullYear());</script> All rights reserved </p>
+                </div>
+              
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- Footer Section End -->
+
+<!-- Search Begin -->
+<div class="search-model">
+    <div class="h-100 d-flex align-items-center justify-content-center">
+        <div class="search-close-switch">+</div>
+        <form class="search-model-form">
+            <input type="text" id="search-input" placeholder="Search here.....">
+        </form>
+    </div>
+</div>
+<!-- Search End -->
+
+<!-- Js Plugins -->
+<script src="static/js/jquery-3.3.1.min.js"></script>
+<script src="static/js/bootstrap.min.js"></script>
+<script src="static/js/jquery.magnific-popup.min.js"></script>
+<script src="static/js/jquery-ui.min.js"></script>
+<script src="static/js/mixitup.min.js"></script>
+<script src="static/js/jquery.countdown.min.js"></script>
+<script src="static/js/jquery.slicknav.js"></script>
+<script src="static/js/owl.carousel.min.js"></script>
+<script src="static/js/jquery.nicescroll.min.js"></script>
+<script src="static/js/main.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script>
+    AOS.init({
+      // Global settings
+      offset: 200, // Offset (in px) from the original trigger point
+  
+      // Settings that can be overridden on a per-element basis
+      once: true, // Whether animation should happen only once - while scrolling down
+    });
+  </script>
+</body>
+
+</html>

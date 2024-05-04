@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 db = SQLAlchemy()
 
@@ -6,10 +7,63 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-
-    def __init__(self, username, email):
-        self.username = username
-        self.email = email
+    items = db.relationship('Item', backref='seller', lazy=True)
+    orders = db.relationship('Order', backref='buyer', lazy=True)
+    reviews = db.relationship('Review', backref='reviewer', lazy=True)
+    messages_sent = db.relationship('Message', foreign_keys='Message.sender_id', backref='sender', lazy=True)
+    messages_received = db.relationship('Message', foreign_keys='Message.receiver_id', backref='receiver', lazy=True)
 
     def __repr__(self):
         return '<User %r>' % self.username
+
+class Category(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), nullable=False)
+    items = db.relationship('Item', backref='category', lazy=True)
+
+    def __repr__(self):
+        return '<Category %r>' % self.name
+
+class Item(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    price = db.Column(db.Float, nullable=False)
+    image = db.Column(db.String(100), nullable=True)  # Path to image file
+    category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    orders = db.relationship('Order', backref='item', lazy=True)
+    reviews = db.relationship('Review', backref='item', lazy=True)
+
+    def __repr__(self):
+        return '<Item %r>' % self.name
+
+class Order(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    item_id = db.Column(db.Integer, db.ForeignKey('item.id'), nullable=False)
+    buyer_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+    def __repr__(self):
+        return '<Order %r>' % self.id
+
+class Review(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text, nullable=False)
+    rating = db.Column(db.Integer, nullable=False)
+    item_id = db.Column(db.Integer, db.ForeignKey('item.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+    def __repr__(self):
+        return '<Review %r>' % self.id
+
+class Message(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    sender_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    receiver_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    timestamp = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+    def __repr__(self):
+        return '<Message %r>' % self.id
+# 

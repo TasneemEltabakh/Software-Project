@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, redirect
+from flask import Flask, render_template, url_for, redirect , request , flash
 from models import db, User
 from config import Config
 
@@ -21,6 +21,7 @@ def product_main():
 @app.route('/contact')
 def contact():
     return render_template('contact.html')
+
 
 @app.route('/shop-cart')
 def cart():

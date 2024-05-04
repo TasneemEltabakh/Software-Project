@@ -1,8 +1,10 @@
 from flask import Flask, render_template, url_for, redirect , request , flash
 from models import db, User
 from config import Config
-
+from models import ContactMessage
 app = Flask(__name__)
+#remeber to make it hidden on pupblic [important]
+app.config['SECRET_KEY'] = b'_5#y2L"F4Q8z\n\xec]/'
 app.config.from_object(Config)
 
 db.init_app(app)
@@ -18,8 +20,21 @@ def index():
 def product_main():
     return render_template('productMain.html')
 
-@app.route('/contact')
+@app.route('/contact', methods=['GET', 'POST'])
 def contact():
+    if request.method == 'POST':
+        name = request.form.get('name')
+        email = request.form.get('email')
+        message = request.form.get('message')
+        contact_message = ContactMessage(name=name, email=email, message=message)
+        db.session.add(contact_message)
+        db.session.commit()
+
+        # [show message ]
+        flash('Your message has been sent successfully!')
+        print('Flash message set')
+        return redirect(url_for('contact'))
+
     return render_template('contact.html')
 
 

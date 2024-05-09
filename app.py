@@ -1,9 +1,11 @@
-from flask import Flask, render_template, url_for, redirect , request , flash
+from flask import Flask, render_template, url_for, redirect , request , flash, session
 from models import db, User
 from config import Config
-from models import ContactMessage
+from models import ContactMessage, User, Item, Category,Order,Review,Message,Cart
+
 app = Flask(__name__)
 #remeber to make it hidden on pupblic [important]
+
 app.config['SECRET_KEY'] = b'_5#y2L"F4Q8z\n\xec]/'
 app.config.from_object(Config)
 
@@ -19,7 +21,7 @@ def index():
 @app.route('/productMain')
 def product_main():
     return render_template('productMain.html')
-
+ 
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
     if request.method == 'POST':
@@ -38,9 +40,26 @@ def contact():
     return render_template('contact.html')
 
 
-@app.route('/shop-cart')
+@app.route('/shop-cart',methods=['GET','POST'])
 def cart():
-    return render_template('shop-cart.html')
+    if request.method=='GET':
+         #get items that user put in cart using query(need user id and search in orders (wtd for guest?))
+         #get the items in an array and pass the array to html
+         #loop through the array and extract name, img, price,..etc
+         #make the buttons interactive
+         #if user put address, i fguest let him put address
+         #add shipping cost then you'd have the order details 
+       #  userID=User.query.filter_by()
+        quantity=request.data
+        userID=1 #we'll be getting user id from login or guest session
+        items=Item.query.filter_by(user_id=userID) # currently getting all items untill user login/guest
+        if items.count==0:
+            flash('Your Cart is Empty')
+    elif request.method=='POST':
+
+        if request.form['form_name'] == 'form1':
+            quantity=request.form.get('quantity')
+    return render_template('shop-cart.html', items=items,quantity=quantity)
 
 @app.route('/checkout')
 def checkout():

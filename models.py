@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+#from sqlalchemy import CheckConstraint
 from datetime import datetime
 
 db = SQLAlchemy()
@@ -7,11 +8,14 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
+    address=db.Column(db.String(200), nullable=False)
     items = db.relationship('Item', backref='seller', lazy=True)
     orders = db.relationship('Order', backref='buyer', lazy=True)
     reviews = db.relationship('Review', backref='reviewer', lazy=True)
     messages_sent = db.relationship('Message', foreign_keys='Message.sender_id', backref='sender', lazy=True)
     messages_received = db.relationship('Message', foreign_keys='Message.receiver_id', backref='receiver', lazy=True)
+    cart=db.relationship('Cart',backref='user',uselist=False,lazy=True)
+
 
     def __repr__(self):
         return '<User %r>' % self.username
@@ -30,10 +34,14 @@ class Item(db.Model):
     description = db.Column(db.Text, nullable=False)
     price = db.Column(db.Float, nullable=False)
     image = db.Column(db.String(100), nullable=True)  # Path to image file
+    quantity=db.Column(db.Integer,nullable=False,default=1)
+    rate=db.Column(db.Integer,nullable=False)
+    db.CheckConstraint("rate>0 AND rate <11")
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    orders = db.relationship('Order', backref='item', lazy=True)
+    #orders = db.relationship('Order', backref='item', lazy=True)
     reviews = db.relationship('Review', backref='item', lazy=True)
+    cart_id=db.Column(db.Integer,db.ForeignKey('cart.id'))
 
     def __repr__(self):
         return '<Item %r>' % self.name
@@ -43,6 +51,7 @@ class Order(db.Model):
     item_id = db.Column(db.Integer, db.ForeignKey('item.id'), nullable=False)
     buyer_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    items=db.relationship('Item',backref='Order',lazy=True)
 
     def __repr__(self):
         return '<Order %r>' % self.id
@@ -77,3 +86,11 @@ class ContactMessage(db.Model):
 
     def __repr__(self):
         return f'<ContactMessage {self.name}>'
+
+
+class Cart(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    total_payment=db.Column(db.Integer,nullable=False)
+
+    user_id=db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    items=db.relationship('Item',backref='cart',lazy=True)

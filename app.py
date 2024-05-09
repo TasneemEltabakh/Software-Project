@@ -50,7 +50,7 @@ def cart():
          #if user put address, i fguest let him put address
          #add shipping cost then you'd have the order details 
        #  userID=User.query.filter_by()
-        quantity=request.data
+        #quantity=request.data
         userID=1 #we'll be getting user id from login or guest session
         items=Item.query.filter_by(user_id=userID) # currently getting all items untill user login/guest
         if items.count==0:
@@ -59,7 +59,7 @@ def cart():
 
         if request.form['form_name'] == 'form1':
             quantity=request.form.get('quantity')
-    return render_template('shop-cart.html', items=items,quantity=quantity)
+    return render_template('shop-cart.html', items=items)
 
 @app.route('/checkout')
 def checkout():

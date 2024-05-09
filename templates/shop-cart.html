@@ -2,6 +2,7 @@
 {% extends 'basic.html' %}
 {% block head %}
 
+
     <!-- Breadcrumb Begin -->
     <div class="breadcrumb-option">
         <div class="container">
@@ -36,6 +37,8 @@
                             
                             <tbody>
                                 {%for item in items%}
+                                
+
                                 <tr>
                                     <td class="cart__product__item">
                                         <img src="{{item.image}}" alt="">
@@ -93,8 +96,13 @@
                     <div class="cart__total__procced">
                         <h6>Cart total</h6>
                         <ul>
-                            <li>Subtotal <span>$ 750.0</span></li>
-                            <li>Total <span>$ 750.0</span></li>
+                            {% set num = namespace(subtotal=0) %}
+                            {% for item in items %}
+                                {% set num.subtotal = num.subtotal + item.price %}
+                                {% endfor %}
+                            <li>Subtotal <span>$ {{ num.subtotal}}</span></li>
+                         
+                            <li>Total <span>$ {{num.subtotal + (0.14*num.subtotal)}}</span></li>
                         </ul>
                         <a href="{{ url_for('checkout') }}" class="primary-btn">Proceed to checkout</a>
                     </div>

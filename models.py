@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from sqlalchemy import PrimaryKeyConstraint
 
 db = SQLAlchemy()
 
@@ -13,8 +14,7 @@ class User(db.Model):
     reviews = db.relationship('Review', backref='reviewer', lazy=True)
     messages_sent = db.relationship('Message', foreign_keys='Message.sender_id', backref='sender', lazy=True)
     messages_received = db.relationship('Message', foreign_keys='Message.receiver_id', backref='receiver', lazy=True)
-    cart=db.relationship('Cart',backref='user',uselist=False,lazy=True)
-
+    cart = db.relationship('Cart', backref='user', uselist=False, lazy=True)
 
     def __repr__(self):
         return '<User %r>' % self.username
@@ -89,6 +89,4 @@ class ContactMessage(db.Model):
 class Cart(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     total_payment=db.Column(db.Integer,nullable=False)
-    itemid=db.Column(db.Integer, db.ForeignKey('Item.id'), nullable=False)
     user_id=db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
- 

@@ -5,13 +5,14 @@
 
 from flask import Flask, render_template, url_for, redirect , request , flash, session, jsonify
 from models import db, User
+import uuid
 from config import Config
 from models import ContactMessage, User, Item, Category,Order,Review,Message,Cart
 
 
 app = Flask(__name__)
 #remeber to make it hidden on pupblic [important]
-
+app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'  # Secret key for session encryption
 app.config['SECRET_KEY'] = b'_5#y2L"F4Q8z\n\xec]/'
 app.config.from_object(Config)
 
@@ -27,6 +28,9 @@ with app.app_context():
 #index#
 @app.route('/')
 def index():
+    # Check if session ID exists, generate one if not
+    if 'session_id' not in session:
+        session['session_id'] = str(uuid.uuid4())  # Generate unique session ID
     return render_template('index.html')
 
 #MainProduct#
@@ -123,8 +127,34 @@ def checkout():
 
 
 #Sell New Item#
-@app.route('/Sellitem')
+@app.route('/Sellitem', methods=['GET', 'POST'])
 def Additemtosell():
+    if request.method == 'POST':
+        title = request.form.get('title')
+        email = request.form.get('email')
+        phone = request.form.get('phone')
+        type = request.form.get('type')
+        discription = request.form.get('description')
+        location = request.form.get('location')
+        status = request.form.get('itemStatus')
+        priceType = int(request.form.get('priceType'))  
+        if(priceType==0):
+            price = 0
+        else:
+            price = request.form.get('priceInput')
+         
+        rate = request.form.get('rating')
+        image = request.form.get('imageUpload0')
+        newItem = Item(name=title, description= discription, price=price, image= image, quantity=1, rate=rate, category_id=int(type), user_id=1 )
+ 
+        db.session.add(newItem)
+        db.session.commit()
+
+        # [show message ]
+        flash('Your item has been added successfully!')
+        print('Flash message set')
+        return redirect(url_for('Additemtosell'))
+
     return render_template('Sellitem.html')
 
 ###########################

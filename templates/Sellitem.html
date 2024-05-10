@@ -1,7 +1,21 @@
 {% extends 'basic.html' %}
 {% block head %}
 
-
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          {% for message in messages %}
+            <div class="alert alert-success" role="alert">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endwith %}
     <!-- Breadcrumb Begin -->
     <div class="breadcrumb-option">
         <div class="container">
@@ -23,39 +37,39 @@
                     <h6 class="coupon__link">  <i class="fa fa-exchange"></i> Bye Bye Tadbeesa </h6>
                 </div>
             </div>
-            <form action="#" class="checkout__form">
+            <form action="{{ url_for('Additemtosell') }}" method="post" class="checkout__form">
                 <div class="row">
                     <div>
                         <h5>Product Details</h5>
                         <div class="row">
                             <div class="col-lg-6 col-md-6 col-sm-6">
                                 <div class="checkout__form__input">
-                                    <p>Title<span>*</span></p>
-                                    <input type="text">
+                                    <h6>Title<span>*</span></h6>
+                                    <input type="text" name="title">
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-6">
                                 <div class="checkout__form__input">
                                     <p>Type <span>*</span></p>
                                     <label>
-                                        <input type="radio" name="type" value="Women">Women
+                                        <input type="radio" name="type" value="1">Women
                                     </label>
                                     <label>
-                                        <input type="radio" name="type" value="Men"> Men
+                                        <input type="radio" name="type" value="2"> Men
                                     </label>
                                     <label>
-                                        <input type="radio" name="type" value="Kids"> Kids
+                                        <input type="radio" name="type" value="3"> Kids
                                     </label>
                                     <label>
-                                        <input type="radio" name="type" value="Other"> Other
+                                        <input type="radio" name="type" value="4"> Other
                                     </label>
                                 </div>
                             </div>
                          
                             <div class="col-lg-12">
                                 <div class="checkout__form__input">
-                                    <p>Description <span>*</span></p>
-                                    <input type="text"
+                                    <h6>Description <span>*</span></h6>
+                                    <input type="text" name="description"
                                     placeholder="Include condition, features and reason for selling">
                                 </div>
                                 <div class="checkout__form__input">
@@ -91,22 +105,24 @@
                                         <option value="Suez">Suez</option>
                                     </select>
                                 </div>
+                                <br><br>
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6 col-sm-6">
                                         <div class="checkout__form__input" id="priceOptions">
                                             <p>Price is <span>*</span></p>
                                             <label>
-                                                <input type="radio" name="priceType" value="neg">Negotiable
+                                                <input type="radio" name="priceType" value="2">Negotiable
                                             </label>
                                             <label>
-                                                <input type="radio" name="priceType" value="ex"> Exchange
+                                                <input type="radio" name="priceType" value="1"> Exchange
                                             </label>
                                             <label>
-                                                <input type="radio" name="priceType" value="free"> Free
+                                                <input type="radio" name="priceType" value="0"> Free
                                             </label>
                                         </div>
                                     </div>
                                 </div>
+                                <br><br>
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6 col-sm-6">
                                         <div class="checkout__form__input">
@@ -119,7 +135,8 @@
                                 
                                 <div class="col-lg-6 col-md-6 col-sm-6">
                                     <div class="checkout__form__input">
-                                        <p>item status <span>*</span></p>
+                                        <h6>item status <span>*</span></h6>
+                                        <br>
                                         <label>
                                             <input type="radio" name="itemStatus" value="New">new
                                         </label>
@@ -128,23 +145,45 @@
                                         </label>
                                     </div>
                                 </div>
+                                <br>
+                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                    
+                                   
+                                        <h5>Rate your product</h5>
+                                        <div class="product-rating">
+                                            {% for i in range(5) %}
+                                                <i class="fa fa-star" data-rating="{{ i + 1 }}"></i>
+                                            {% endfor %}
+                                            <input type="hidden" id="rating" name="rating" value="0">
+                                        </div>
+                                   
+                                    
+                                        
+                                        <br><br><br>
+                                        
+                                    </div>
+                                </div>
+                                <br><br>
                             <div class="col-lg-6 col-md-6 col-sm-6">
                                 <div class="checkout__form__input">
                                     <p>Phone <span>*</span></p>
-                                    <input type="text">
+                                    <input type="text" name="phone">
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-6">
                                 <div class="checkout__form__input">
                                     <p>Email <span>*</span></p>
-                                    <input type="text">
+                                    <input type="text" name="email">
                                 </div>
                             </div>
                             <div class="col-lg-12">
                                 <div class="checkout__form__input">
                                     <p> Add up to 10 images <span>*</span></p>
+                                    <br>
                                     <div class="upload-icons">
+                                        
                                         {% for i in range(10) %}
+                                        
                                             <label for="imageUpload{{ i }}" class="upload-label">
                                                 <i id="uploadIcon{{ i }}" class="fa fa-camera upload-icon" style="font-size: 36px;"></i>
                                                 <input type="file" id="imageUpload{{ i }}" name="imageUpload{{ i }}" accept="image/*" style="display: none;">
@@ -170,55 +209,77 @@
             </div>
         </section>
       
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const stars = document.querySelectorAll('.product-rating .fa-star');
         
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const priceInput = document.getElementById('priceInput');
-        const priceOptions = document.getElementById('priceOptions');
+                // Initialize stars to zero (empty stars)
+                stars.forEach(function(star) {
+                    star.classList.remove('fa-star');
+                    star.classList.add('fa-star-o');
+                });
         
-       
-        function handlePriceOptionChange(event) {
-            if (event.target.value === 'free') {
-                priceInput.style.display = 'none'; 
-            } else {
-                priceInput.style.display = 'block'; 
-            }
-        }
+                stars.forEach(function(star) {
+                    star.addEventListener('click', function() {
+                        const rating = parseInt(star.dataset.rating);
+                        const hiddenInput = document.getElementById('rating');
+                        hiddenInput.value = rating;
+        
+                        // Update the class of each star based on the rating
+                        stars.forEach(function(s, index) {
+                            if (index < rating) {
+                                s.classList.add('fa-star');
+                                s.classList.remove('fa-star-o');
+                            } else {
+                                s.classList.add('fa-star-o');
+                                s.classList.remove('fa-star');
+                            }
+                        });
+                    });
+                });
+        
+                const priceInput = document.getElementById('priceInput');
+                const priceOptions = document.getElementById('priceOptions');
+        
+                function handlePriceOptionChange(event) {
+                    if (event.target.value === '0') {  // Check if the value is '0'
+                        priceInput.style.display = 'none';
+                    } else {
+                        priceInput.style.display = 'block';
+                    }
+                }
+        
+                priceOptions.addEventListener('change', handlePriceOptionChange);
+        
+                // Define the function to handle file uploads
+                function handleFileUpload(event, index) {
+                    const uploadIcon = document.getElementById('uploadIcon' + index);
+                    const file = event.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function() {
+                            uploadIcon.style.backgroundImage = 'url(' + reader.result + ')';
+                            uploadIcon.style.backgroundSize = 'cover';
+                            uploadIcon.classList.remove('fa-camera');
+                            uploadIcon.style.fontSize = 'initial';
+                        }
+                        reader.readAsDataURL(file);
+                    }
+                }
+        
+                // Loop through each input element with id starting with 'imageUpload'
+                for (let i = 0; i < 10; i++) {
+                    const input = document.getElementById('imageUpload' + i);
+        
+                    // Check if the input element exists
+                    if (input) {
+                        input.addEventListener('change', function(event) {
+                            handleFileUpload(event, i);
+                        });
+                    }
+                }
+            });
+        </script>
         
         
-        priceOptions.addEventListener('change', handlePriceOptionChange);
-    });
-// Define the function to handle file uploads
-function handleFileUpload(event, index) {
-    const uploadIcon = document.getElementById('uploadIcon' + index);
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function() {
-            uploadIcon.style.backgroundImage = 'url(' + reader.result + ')';
-            uploadIcon.style.backgroundSize = 'cover'; 
-            uploadIcon.classList.remove('fa-camera');
-            uploadIcon.style.fontSize = 'initial'; 
-        }
-        reader.readAsDataURL(file);
-    }
-}
-
-// Loop through each input element with id starting with 'imageUpload'
-for (let i = 0; i < 10; i++) {
-    const input = document.getElementById('imageUpload' + i);
-    
-    // Check if the input element exists
-    if (input) {
-        input.addEventListener('change', function(event) {
-            handleFileUpload(event, i);
-        });
-    }
-}
-
-    
-    
-</script>
- {% endblock %}
-
-
+         {% endblock %}

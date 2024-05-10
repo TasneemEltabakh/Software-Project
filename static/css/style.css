@@ -716,6 +716,20 @@ ol {
 	margin-right: 0;
 }
 
+
+.product-rating {
+    display: inline-block;
+    margin-right: 15px;
+}
+
+ .product-rating > i {
+        color: #e4e7ed;
+    }
+
+.product-rating > i.fa-star {
+            color: #ffc451;
+        }
+
 .trend__item__text .product__price {
 	color: #111111;
 	font-weight: 600;
@@ -1951,7 +1965,7 @@ ol {
 }
 
 .product__details__widget ul li .stock__checkbox label {
-	display: block;
+	display:inline-block;
 	padding-left: 20px;
 	font-size: 14px;
 	color: #666666;
@@ -2472,10 +2486,10 @@ ol {
 }
 .checkout__form__input input[type="radio"] {
     display:ruby-text;
-    width:50px;
+    width:35px;
 	justify-items: center;
 	justify-content: center;
-    height: 50px;
+    height: 35px;
     border: 2px solid #999;
     border-radius: 50%;
     outline: none;

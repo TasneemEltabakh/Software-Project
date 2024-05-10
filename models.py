@@ -49,7 +49,7 @@ class Item(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     #orders = db.relationship('Order', backref='item', lazy=True)
     reviews = db.relationship('Review', backref='item', lazy=True)
-    cart_id=db.Column(db.Integer,db.ForeignKey('cart.id'))
+    items=db.relationship('Item',backref='item',lazy=True)
 
     def __repr__(self):
         return '<Item %r>' % self.name
@@ -99,6 +99,5 @@ class ContactMessage(db.Model):
 class Cart(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     total_payment=db.Column(db.Integer,nullable=False)
-
     user_id=db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    items=db.relationship('Item',backref='cart',lazy=True)
+    

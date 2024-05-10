@@ -28,10 +28,8 @@
                             <thead>
                                 <tr>
                                     <th>Product</th>
+                                    <th>Description</th>
                                     <th>Price</th>
-                                    <th>Quantity</th>
-                                    <th>Total</th>
-                                    <th></th>
                                 </tr>
                             </thead>
                             
@@ -42,7 +40,7 @@
                                 <tr>
                                     <td class="cart__product__item">
                                         <img src="{{item.image}}" alt="">
-                                        <div class="cart__product__item__title">
+                                        <div class="cart__product__item__title" class="col-8">
                                             <h6>{{item.name}}</h6>
                                             <div class="rating">
                                                 {%set nums=range(1,item.rate)%}
@@ -53,15 +51,10 @@
                                             </div>
                                         </div>
                                     </td>
+                                    <td class="item_description"><span id="total-{{ item.id }}">{{item.description}}</span></td>
+
                                     <td class="cart__price">{{item.price}}</td>
-                                    <td class="cart__quantity">
-                                        <form action="{{ url_for('cart') }}" method="post">
-                                            <input type="hidden" name="form_name" value="form1">
-                                            <input type="number", min="1" ,name="quantity", value="1",id="item_quantity" >
-                                            <button type="submit">Update</button>
-                                        </form>
-                                    </td>
-                                    <td class="cart__total"><span id="total-{{ item.id }}">{{quantity}}</span></td>
+                                   
                                     <td class="cart__close"><span class="icon_close"></span></td>
                                 </tr>
                                 {%endfor%}

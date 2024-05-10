@@ -37,50 +37,9 @@ def index():
 @app.route('/productMain')
 def product_main():
     return render_template('productMain.html')
-<<<<<<< HEAD
-
-#Login#
-@app.route('/Login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['pass']
-
-        user = User.query.filter_by(email=email).first()
-
-        if user and user.password == password:
-            # Successful login
-            return 'Login successful'
-        else:
-            # Invalid credentials
-            return 'Invalid credentials'
-
-    return render_template('Login.html')
-
-#Register#
-@app.route('/Register', methods=['GET', 'POST'])
-def register():
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['pass']
-        phone_number = request.form['number']
-        username = request.form['username']
-        address = request.form['address']
-
-        user = User(email=email, password=password, phone_number=phone_number, username=username, address=address)
-        db.session.add(user)
-        db.session.commit()
-
-        #return redirect(url_for('login'))
-        return render_template('index.html')
-
-    return render_template('Register.html')
 
 
 #Contact#
-=======
- 
->>>>>>> 0ab81a9b5c4c7e54b238277860d42d9c5580ebb6
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
     if request.method == 'POST':

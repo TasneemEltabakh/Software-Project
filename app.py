@@ -24,22 +24,27 @@ with app.app_context():
 #Pages:
 ###########################
 
+#index#
 @app.route('/')
 def index():
     return render_template('index.html')
 
+#MainProduct#
 @app.route('/productMain')
 def product_main():
     return render_template('productMain.html')
 
+#Login#
 @app.route('/Login')
 def login():
     return render_template('Login.html')
 
+#Register#
 @app.route('/Register')
 def register():
     return render_template('Register.html')
 
+#Contact#
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
     if request.method == 'POST':
@@ -57,7 +62,7 @@ def contact():
 
     return render_template('contact.html')
 
-
+#Cart#
 @app.route('/shop-cart',methods=['GET','POST'])
 def cart():
     if request.method=='GET':
@@ -79,9 +84,16 @@ def cart():
             quantity=request.form.get('quantity')
     return render_template('shop-cart.html', items=items,quantity=quantity)
 
+#Checkout#
 @app.route('/checkout')
 def checkout():
     return render_template('checkout.html')
+
+
+#Sell New Item#
+@app.route('/Sellitem')
+def Additemtosell():
+    return render_template('Sellitem.html')
 
 ###########################
 #running the application:

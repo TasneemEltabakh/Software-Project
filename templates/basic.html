@@ -44,6 +44,10 @@
             <li><a href="#"><span class="icon_bag_alt"></span>
                 <div class="tip">2</div>
             </a></li>
+
+            <li><a href="{{ url_for('login') }}">Login</a></li> <!-- Add this line -->
+            <br>  <br>
+            <li><a href="{{ url_for('Additemtosell') }}" class="login-btn">+</a></li> <!-- Add this line -->
         </ul>
         <div class="offcanvas__logo">
             <a href="{{ url_for('index') }}"><img src="static/img/Final.adobe.png" alt=""></a>
@@ -85,7 +89,7 @@
                                 <div class="tip">2</div>
                             </a></li>
                             <li><a href="{{ url_for('login') }}">Login</a></li> <!-- Add this line -->
-                            <li><a href="{{ url_for('login') }}" class="login-btn">Sell</a></li> <!-- Add this line -->
+                            <li><a href="{{ url_for('Additemtosell') }}" class="login-btn">Sell</a></li> <!-- Add this line -->
                         </ul>
                     </div>
                 </div>

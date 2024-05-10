@@ -20,8 +20,22 @@ def index():
 
 @app.route('/productMain')
 def product_main():
-    return render_template('productMain.html')
- 
+    if request.method=='GET':
+        
+        items=Item.query.all()
+        '''itemID = request.form.get('itemID')
+        items=Item.query.filter_by(id=itemID)
+        category_id=items.r
+        Category_names=Category.query.filter_by(id=items.category_id)'''
+    elif request.method=="POST":
+        userID=1
+        itemID = request.form.get('itemID')
+        
+        
+        db.session.commit()
+        return redirect('shop-cart',userID=userID)
+    return render_template('productMain.html',items=items)
+
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
     if request.method == 'POST':
@@ -49,16 +63,17 @@ def cart():
          #make the buttons interactive
          #if user put address, i fguest let him put address
          #add shipping cost then you'd have the order details 
-       #  userID=User.query.filter_by()
+         #  userID=User.query.filter_by()
         #quantity=request.data
         userID=1 #we'll be getting user id from login or guest session
         items=Item.query.filter_by(user_id=userID) # currently getting all items untill user login/guest
         if items.count==0:
             flash('Your Cart is Empty')
     elif request.method=='POST':
-
-        if request.form['form_name'] == 'form1':
-            quantity=request.form.get('quantity')
+            userID=1
+            items=Item.query.filter_by(user_id=userID)
+       # if request.form['form_name'] == 'form1':
+        #    quantity=request.form.get('quantity')
     return render_template('shop-cart.html', items=items)
 
 @app.route('/checkout')

@@ -8,6 +8,8 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
+    password = db.Column(db.String(120), nullable=False) ##
+    phone_number = db.Column(db.String(20), nullable=False) ##
     address=db.Column(db.String(200), nullable=False)
     items = db.relationship('Item', backref='seller', lazy=True)
     orders = db.relationship('Order', backref='buyer', lazy=True)
@@ -16,7 +18,13 @@ class User(db.Model):
     messages_received = db.relationship('Message', foreign_keys='Message.receiver_id', backref='receiver', lazy=True)
     cart=db.relationship('Cart',backref='user',uselist=False,lazy=True)
 
-
+    def __init__(self, email, password, phone_number, username, address):
+        self.email = email
+        self.password = password
+        self.phone_number = phone_number
+        self.username = username
+        self.address = address
+        
     def __repr__(self):
         return '<User %r>' % self.username
 

@@ -469,7 +469,7 @@
 
            </div>
 
-            <form class="login100-form validate-form">
+            <form action="{{ url_for('login') }}" method="post" class="login100-form validate-form">
                
                 <div class="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
                     <input class="input100" type="text" name="email" placeholder="Email">
@@ -486,7 +486,7 @@
                 </div>
                 
                 <div class="container-login100-form-btn">
-                    <button class="login100-form-btn">
+                    <button type="submit" class="login100-form-btn">
                         Login
                     </button>
                 </div>
@@ -494,7 +494,7 @@
             <br><br>
 
                 <div class="text-center p-t-136">
-                    <a class="txt2" href="#">
+                    <a class="txt2" href="{{ url_for('register') }}">
                         Create your Account
                         <i class="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i>
                     </a>

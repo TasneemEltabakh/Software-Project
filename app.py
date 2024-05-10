@@ -35,8 +35,12 @@ def product_main():
 @app.route('/Login')
 def login():
     return render_template('Login.html')
-@app.route('/contact', methods=['GET', 'POST'])
 
+@app.route('/Register')
+def register():
+    return render_template('Register.html')
+
+@app.route('/contact', methods=['GET', 'POST'])
 def contact():
     if request.method == 'POST':
         name = request.form.get('name')

@@ -4,10 +4,6 @@ This Project is a Fashion Trading website where users can upload clothing items 
 # Used Architecture :
 Client server model.
 
-# Patterns used:
-- 
-- 
-
 # How Badelha works:
 
 Upload and Rate: Users can easily upload photos of their clothes along with a rating (1-5) based on their condition. This system ensures transparency and helps users find the perfect items.
@@ -17,3 +13,16 @@ Join us on this exciting journey towards a more sustainable future. Together, we
 
 Let's make fashion sustainable, stylish, and socially responsible with Badelha!
 
+#how to run the code
+-first connect to the database on phy my admin using a server (we used Xampp)
+-run this in the terminal to create the database
+-python 
+from app import app
+from models import db
+
+with app.app_context():
+    
+    #db.create_all()
+-Now the database should be created and connected
+-Run python app.py 
+-open your local host to view the website

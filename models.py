@@ -1,5 +1,4 @@
 from flask_sqlalchemy import SQLAlchemy
-#from sqlalchemy import CheckConstraint
 from datetime import datetime
 
 db = SQLAlchemy()
@@ -29,7 +28,7 @@ class Category(db.Model):
         return '<Category %r>' % self.name
 
 class Item(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=False)
     price = db.Column(db.Float, nullable=False)
@@ -41,7 +40,6 @@ class Item(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     #orders = db.relationship('Order', backref='item', lazy=True)
     reviews = db.relationship('Review', backref='item', lazy=True)
-    cart_id=db.Column(db.Integer,db.ForeignKey('cart.id'))
 
     def __repr__(self):
         return '<Item %r>' % self.name
@@ -91,6 +89,6 @@ class ContactMessage(db.Model):
 class Cart(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     total_payment=db.Column(db.Integer,nullable=False)
-
+    itemid=db.Column(db.Integer, db.ForeignKey('Item.id'), nullable=False)
     user_id=db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    items=db.relationship('Item',backref='cart',lazy=True)
+ 

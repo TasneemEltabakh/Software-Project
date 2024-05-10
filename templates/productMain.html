@@ -7,7 +7,7 @@
         <div class="row">
             <div class="col-lg-4 col-md-4">
                 <div class="section-title">
-                    <h4>New product</h4>
+                    <h4>Products</h4>
                 </div>
             </div>
             <div class="col-lg-8 col-md-8">
@@ -18,34 +18,42 @@
                     <li data-filter=".kid">Kid’s</li>
                     <li data-filter=".accessories">Accessories</li>
                     <li data-filter=".cosmetic">Cosmetics</li>
-                    <li data-filter=".cosmetic">shoes</li>
+                    <li data-filter=".shoes">shoes</li>
                 </ul>
             </div>
         </div>
         <div class="row property__gallery">
-            <div class="col-lg-3 col-md-4 col-sm-6 mix kid">
+            {%for item in items%}
+            <div class="col-lg-3 col-md-4 col-sm-6 mix men">
                 <div class="product__item">
-                    <div class="product__item__pic set-bg" data-setbg="static/img/product/product-1.jpg">
+                    <div class="product__item__pic set-bg" data-setbg="{{item.image}}">
                         <div class="label new">New</div>
                         <ul class="product__hover">
-                            <li><a href="static/img/product/product-1.jpg" class="image-popup"><span class="arrow_expand"></span></a></li>
+                            <li><a href="{{item.image}}" class="image-popup"><span class="arrow_expand"></span></a></li>
                             <li><a href="#"><span class="icon_heart_alt"></span></a></li>
-                            <li><a href="#"><span class="icon_bag_alt"></span></a></li>
-                        </ul>
+                            <li>
+                                <form action="shop-cart" method="POST">
+                                    <input type="hidden" name="itemID" value="{{item.id}}">
+                                    <button type="submit" class="btn btn-link" style="border:none; background-color:transparent;">
+                                        <span class="icon_bag_alt"></span>
+                                    </button>
+                                </form>
+                            </li>                       </ul>
                     </div>
                     <div class="product__item__text">
-                        <h6><a href="#">Buttons tweed blazer</a></h6>
+                        <h6><a href="#">{{item.name}}</a></h6>
                         <div class="rating">
+                            {%set nums=range(1,item.rate)%}
+                            {%for num in nums%}
                             <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
+                            
+                            {%endfor%}
                         </div>
-                        <div class="product__price">$ 59.0</div>
+                        <div class="product__price">$ {{item.price}}</div>
                     </div>
                 </div>
             </div>
+            {%endfor%}
         </div>
     </div>
 </section>

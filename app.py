@@ -37,18 +37,7 @@ def index():
 @app.route('/productMain')
 def product_main():
     return render_template('productMain.html')
-
-#Login#
-@app.route('/Login')
-def login():
-    return render_template('Login.html')
-
-#Register#
-@app.route('/Register')
-def register():
-    return render_template('Register.html')
-
-#Contact#
+ 
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
     if request.method == 'POST':
@@ -76,8 +65,8 @@ def cart():
          #make the buttons interactive
          #if user put address, i fguest let him put address
          #add shipping cost then you'd have the order details 
-        #userID=User.query.filter_by()
-        quantity=request.data
+         #  userID=User.query.filter_by()
+        #quantity=request.data
         userID=1 #we'll be getting user id from login or guest session
         items=Item.query.filter_by(user_id=userID) # currently getting all items untill user login/guest
         if items.count==0:
@@ -86,7 +75,7 @@ def cart():
 
         if request.form['form_name'] == 'form1':
             quantity=request.form.get('quantity')
-    return render_template('shop-cart.html', items=items,quantity=quantity)
+    return render_template('shop-cart.html', items=items)
 
 #Checkout#
 @app.route('/checkout')

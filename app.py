@@ -1,7 +1,13 @@
-from flask import Flask, render_template, url_for, redirect , request , flash, session
+
+###########################
+#importing:
+###########################
+
+from flask import Flask, render_template, url_for, redirect , request , flash, session, jsonify
 from models import db, User
 from config import Config
 from models import ContactMessage, User, Item, Category,Order,Review,Message,Cart
+
 
 app = Flask(__name__)
 #remeber to make it hidden on pupblic [important]
@@ -14,6 +20,10 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
+###########################
+#Pages:
+###########################
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -21,8 +31,12 @@ def index():
 @app.route('/productMain')
 def product_main():
     return render_template('productMain.html')
- 
+
+@app.route('/Login')
+def login():
+    return render_template('Login.html')
 @app.route('/contact', methods=['GET', 'POST'])
+
 def contact():
     if request.method == 'POST':
         name = request.form.get('name')
@@ -49,8 +63,8 @@ def cart():
          #make the buttons interactive
          #if user put address, i fguest let him put address
          #add shipping cost then you'd have the order details 
-       #  userID=User.query.filter_by()
-        #quantity=request.data
+        #userID=User.query.filter_by()
+        quantity=request.data
         userID=1 #we'll be getting user id from login or guest session
         items=Item.query.filter_by(user_id=userID) # currently getting all items untill user login/guest
         if items.count==0:
@@ -59,10 +73,15 @@ def cart():
 
         if request.form['form_name'] == 'form1':
             quantity=request.form.get('quantity')
-    return render_template('shop-cart.html', items=items)
+    return render_template('shop-cart.html', items=items,quantity=quantity)
 
 @app.route('/checkout')
 def checkout():
     return render_template('checkout.html')
-if __name__ == "__main__":
-    app.run(debug=True)
+
+###########################
+#running the application:
+###########################
+
+if __name__ == "__main__": #run the application dynamically
+    app.run(debug=True) #to run in debug mode

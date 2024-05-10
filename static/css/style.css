@@ -181,7 +181,17 @@ ol {
 	border-radius: 50px;
 }
 
-/* Preloder */
+.login-btn {
+    font-size: 8px; /* Adjust the font size to make the text smaller */
+    font-weight: 600;
+    border: 2px solid #12fb25;
+    text-transform: uppercase;
+    display: inline-block;
+    padding: 8px 20px; /* Adjust the padding values to make the button smaller */
+    border-radius: 50px;
+    background-color: rgba(0, 0, 0, 0);
+    color: #12fb25;
+}
 
 #preloder {
 	position: fixed;
@@ -326,10 +336,15 @@ ol {
 }
 
 .header__logo {
-	padding: 26px 100px;
-	margin-right: 50px;
+    display: flex;
+    justify-content:center;
+    align-items: center;
 }
 
+.header__logo img {
+    max-height: auto; /* Adjust the height of the logo */
+    max-width: 200px; /* Allow the image to resize proportionally */
+}
 @media (max-width: 768px) {
 	.header__logo  {
 		padding: 26px 25px;
@@ -493,8 +508,10 @@ ol {
 }
 
 .header__right {
-	text-align: right;
-	padding: 30px 0 27px;
+	text-align:center;
+	padding: 20px 0;
+	justify-content: center;
+	align-items: center;
 }
 
 .header__right__auth {
@@ -529,7 +546,7 @@ ol {
 	display: inline-block;
 	top: 20px; /* Adjust as needed */
     right: 100px; /* Position the element 100px from the right edge */
-    margin-right: 100px; /* Add a 100px margin from the right */
+   
 }
 
 .header__right__widget li {

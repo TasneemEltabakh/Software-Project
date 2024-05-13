@@ -2484,6 +2484,14 @@ ol {
 	padding-left: 20px;
 	color: #666666;
 }
+.user-icon {
+	color: black; 
+}
+.no-marker {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
 .checkout__form__input input[type="radio"] {
     display:ruby-text;
     width:35px;

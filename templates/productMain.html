@@ -24,21 +24,21 @@
         </div>
         <div class="row property__gallery">
             {%for item in items%}
-            <div class="col-lg-3 col-md-4 col-sm-6 mix men">
+             <div class="col-lg-3 col-md-4 col-sm-6 mix {{ categories[item.category_id - 1]|lower }}">
                 <div class="product__item">
                     <div class="product__item__pic set-bg" data-setbg="{{item.image}}">
                         <div class="label new">New</div>
-                        <ul class="product__hover">
-                            <li><a href="{{item.image}}" class="image-popup"><span class="arrow_expand"></span></a></li>
-                            <li><a href="#"><span class="icon_heart_alt"></span></a></li>
-                            <li>
-                                <form action="shop-cart" method="POST">
-                                    <input type="hidden" name="itemID" value="{{item.id}}">
-                                    <button type="submit" class="btn btn-link" style="border:none; background-color:transparent;">
-                                        <span class="icon_bag_alt"></span>
-                                    </button>
-                                </form>
-                            </li>                       </ul>
+     <ul class="product__hover">
+      
+
+   <img src="static/img/{{ item.image }}" alt="">
+   <br><br>
+   <form action="{{url_for('add_to_cart') }}" method="POST">
+    <input hidden name="itemnumber" value="{{item.id}}">
+    <button type="submit" class="site-btn">add to cart</button>
+</form>
+    
+</ul>
                     </div>
                     <div class="product__item__text">
                         <h6><a href="#">{{item.name}}</a></h6>

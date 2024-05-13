@@ -5,10 +5,10 @@
 
 from flask import Flask, render_template, url_for, redirect , request , flash, session, jsonify
 from models import db, User
-import uuid
+from werkzeug.security import check_password_hash
 from config import Config
 from models import ContactMessage, User, Item, Category,Order,Review,Message,Cart
-
+from sqlalchemy.exc import IntegrityError
 
 app = Flask(__name__)
 #remeber to make it hidden on pupblic [important]
@@ -19,25 +19,48 @@ app.config.from_object(Config)
 db.init_app(app)
 
 with app.app_context():
-    db.create_all()
-
+   db.create_all()
 ###########################
 #Pages:
 ###########################
 
+# Function to get the current user object based on the user ID stored in the session
+def get_current_user():
+    if 'user_id' in session:
+        user_id = session['user_id']
+        return User.query.get(user_id)
+    return None  # Return None if no user is logged in
+
+# Pass user object to all templates using context processor
+@app.context_processor
+def inject_user():
+    return dict(current_user=get_current_user())
+
 #index#
 @app.route('/')
 def index():
-    # Check if session ID exists, generate one if not
-    if 'session_id' not in session:
-        session['session_id'] = str(uuid.uuid4())  # Generate unique session ID
-    return render_template('index.html')
+    login_flag = request.args.get('login', 0)  
+    return render_template('index.html', login=int(login_flag))
 
 #MainProduct#
-@app.route('/productMain')
+@app.route('/productMain', methods=['GET'])
 def product_main():
-    return render_template('productMain.html')
+   
 
+    items= Item.query.all()
+    categories = []
+
+    for item in items:
+        category = item.category_id  
+        if(category==1):
+            categories.append('women')
+        elif(category==2):
+            categories.append('men')
+        elif(category==3):
+            categories.append('kids')
+   
+        
+    return render_template('productMain.html',items=items, categories=categories)
 
 #Contact#
 @app.route('/contact', methods=['GET', 'POST'])
@@ -61,22 +84,23 @@ def contact():
 @app.route('/shop-cart',methods=['GET','POST'])
 def cart():
     if request.method=='GET':
-         #get items that user put in cart using query(need user id and search in orders (wtd for guest?))
-         #get the items in an array and pass the array to html
-         #loop through the array and extract name, img, price,..etc
-         #make the buttons interactive
-         #if user put address, i fguest let him put address
-         #add shipping cost then you'd have the order details 
-         #  userID=User.query.filter_by()
-        #quantity=request.data
-        userID=1 #we'll be getting user id from login or guest session
-        items=Item.query.filter_by(user_id=userID) # currently getting all items untill user login/guest
-        if items.count==0:
-            flash('Your Cart is Empty')
-    elif request.method=='POST':
+        # Get the current user ID from the session
+        user_id = session.get('user_id')
 
+        if user_id:
+            # Retrieve items in the cart for the current user
+            items = Item.query.filter_by(user_id=user_id).all()
+            if not items:
+                flash('Your Cart is Empty')
+        else:
+            flash('You need to log in to view your cart.')
+            return redirect(url_for('login'))
+
+    elif request.method=='POST':
+        # Process POST request for adding items to the cart
         if request.form['form_name'] == 'form1':
-            quantity=request.form.get('quantity')
+            quantity = request.form.get('quantity')
+
     return render_template('shop-cart.html', items=items)
 
 #Checkout#
@@ -84,8 +108,7 @@ def cart():
 def checkout():
     return render_template('checkout.html')
 
-#Login#
-@app.route('/Login', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         email = request.form['email']
@@ -94,13 +117,43 @@ def login():
         user = User.query.filter_by(email=email).first()
 
         if user and user.password == password:
-            # Successful login
-            return 'Login successful'
+            # Successful login, set user ID in session
+            session['user_id'] = user.id
+            return redirect(url_for('index'))  # Redirect to index after successful login
         else:
             # Invalid credentials
-            return 'Invalid credentials'
+            return render_template('login.html', error='Invalid credentials')
 
-    return render_template('Login.html')
+    return render_template('login.html')
+
+# Logout
+@app.route('/logout')
+def logout():
+    
+    session.pop('user_id', None)
+    return redirect(url_for('index'))
+#Profile
+
+@app.route('/Profile', methods=['GET', 'POST'])
+def profile():
+    if request.method == 'POST':
+        # Extract form data
+        new_username = request.form.get('username')
+        new_password = request.form.get('password')
+
+        # Update user's information in the database
+        current_user = get_current_user()
+        try:
+            current_user.username = new_username
+            current_user.password = new_password
+            db.session.commit()
+            return redirect(url_for('profile'))
+        except IntegrityError as e:
+            db.session.rollback()
+            flash('Username already exists. Please choose a different username.')
+            return redirect(url_for('profile'))
+    
+    return render_template('Profile.html')
 
 #Register#
 @app.route('/Register', methods=['GET', 'POST'])
@@ -116,13 +169,13 @@ def register():
         db.session.add(user)
         db.session.commit()
 
-        #return redirect(url_for('login'))
         return render_template('index.html')
 
     return render_template('Register.html')
 
 
-#Contact#
+
+
 #Sell New Item#
 @app.route('/Sellitem', methods=['GET', 'POST'])
 def Additemtosell():
@@ -141,7 +194,11 @@ def Additemtosell():
             price = request.form.get('priceInput')
          
         rate = request.form.get('rating')
-        image = request.form.get('imageUpload0')
+
+        image = request.form.get(f'imageUpload0')
+
+            
+
         newItem = Item(name=title, description= discription, price=price, image= image, quantity=1, rate=rate, category_id=int(type), user_id=1 )
  
         db.session.add(newItem)
@@ -154,6 +211,26 @@ def Additemtosell():
 
     return render_template('Sellitem.html')
 
+@app.route('/productMain', methods=['POST'])
+def add_to_cart():
+    if request.method == 'POST':
+        item_id = request.form.get('itemnumber')
+        item = Item.query.filter_by(id=item_id).first()
+        
+        # Get the current user object
+        current_user = get_current_user()
+        
+        if current_user:
+            user_id = current_user.id  # Extract the user ID from the user object
+            newItemCart = Cart(item_id=item_id, user_id=user_id, total_payment=item.price)
+            db.session.add(newItemCart)
+            db.session.commit()
+            return redirect(url_for('cart'))
+        else:
+            # Handle the case where no user is logged in
+            flash('Please log in to add items to your cart.')
+            return redirect(url_for('login'))
+   
 ###########################
 #running the application:
 ###########################

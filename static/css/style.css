@@ -33,7 +33,9 @@
 
 html,
 body {
-	height: 100%;
+	min-height: 100vh;
+	display: flex;
+    flex-direction: column;
 	font-family: "Cairo", sans-serif;
 	-webkit-font-smoothing: antialiased;
 	width: 100%
@@ -958,7 +960,7 @@ ol {
 .footer {
 	background-color:#c0ecb6;
 	padding-top: 55px;
-	position: relative;
+	margin-top: auto;
 }
 
 .footer__about {

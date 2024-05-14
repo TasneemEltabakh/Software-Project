@@ -9,6 +9,7 @@ from werkzeug.security import check_password_hash
 from config import Config
 from models import ContactMessage, User, Item, Category,Order,Review,Message,Cart
 from sqlalchemy.exc import IntegrityError
+from datetime import datetime
 
 app = Flask(__name__)
 #remeber to make it hidden on pupblic [important]
@@ -172,6 +173,7 @@ def update_product(item_id):
     item = Item.query.get(item_id)
 
     if request.method == 'POST':
+        
         name = request.form.get('name')
         description = request.form.get('description')
         price = float(request.form.get('price'))
@@ -183,10 +185,80 @@ def update_product(item_id):
         return redirect(url_for('published'))
 
     return render_template('UpdateProduct.html', item=item)
+
 #Checkout#
-@app.route('/checkout')
+@app.route('/checkout', methods=['GET', 'POST'])
 def checkout():
-    return render_template('checkout.html')
+    user_id = session.get('user_id')
+    cart_items = Cart.query.filter_by(user_id=user_id).all()
+    items = []
+    total_price = 0
+    for cart_item in cart_items:
+        item = Item.query.get(cart_item.item_id)
+        items.append(item)
+        total_price += item.price
+    
+        if request.method == 'POST':
+                required_fields = ['first_name', 'last_name', 'country', 'address', 'city', 'state', 'zipcode', 'phone', 'email']
+                for field in required_fields:
+                    if not request.form.get(field):
+                        flash(f'The field "{field.replace("_", " ").title()}" is required.', 'error')
+                        return redirect(url_for('checkout'))
+
+                first_name = request.form.get('first_name')
+                last_name = request.form.get('last_name')
+                country = request.form.get('country')
+                address = request.form.get('address')
+                city = request.form.get('city')
+                state = request.form.get('state')
+                zipcode = request.form.get('zipcode')
+                phone = request.form.get('phone')
+                email = request.form.get('email')
+
+                
+                total_price = 0
+                cart_items = Cart.query.filter_by(user_id=user_id).all()
+                for cart_item in cart_items:
+                    item = Item.query.get(cart_item.item_id)
+                    total_price += item.price
+
+                
+                order = Order(
+                    buyer_id=user_id,
+                    date=datetime.utcnow(),
+                    first_name=first_name,
+                    last_name=last_name,
+                    country=country,
+                    address=address,
+                    city=city,
+                    state=state,
+                    zipcode=zipcode,
+                    phone=phone,
+                    email=email,
+                    status=0  
+                )
+                db.session.add(order)
+
+                for cart_item in cart_items:
+                    item_id = cart_item.item_id
+                    Cart.query.filter_by(item_id=item_id).delete()
+                    db.session.commit()
+
+                    item = Item.query.get(item_id)
+                    if item:
+                        db.session.delete(item)
+                        db.session.commit()
+
+                flash('Your order has been placed successfully!')
+                return render_template('OrderTracking.html', order=order)
+    
+    return render_template('checkout.html', items=items, total_price=total_price)
+
+    
+#OrderTracking
+@app.route('/OrderTracking')
+def order_summary():
+    return render_template('OrderTracking.html')
 
 #Login
 @app.route('/login', methods=['GET', 'POST'])
@@ -291,7 +363,7 @@ def Additemtosell():
         # [show message ]
         flash('Your item has been added successfully!')
         print('Flash message set')
-        return redirect(url_for('Additemtosell'))
+        return redirect(url_for('published'))
 
     return render_template('Sellitem.html')
 

@@ -53,15 +53,6 @@ class Item(db.Model):
     def __repr__(self):
         return '<Item %r>' % self.name
 
-class Order(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    item_id = db.Column(db.Integer, db.ForeignKey('item.id'), nullable=False)
-    buyer_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    items=db.relationship('Item',backref='Order',lazy=True)
-
-    def __repr__(self):
-        return '<Order %r>' % self.id
 
 class Review(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -103,3 +94,63 @@ class Cart(db.Model):
  
     def __repr__(self):
         return f'<Cart {self.id}>'
+
+order_item = db.Table('order_item',
+    db.Column('order_id', db.Integer, db.ForeignKey('order.id'), primary_key=True),
+    db.Column('item_id', db.Integer, db.ForeignKey('item.id'), primary_key=True)
+)
+
+
+class Order(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    buyer_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+    first_name = db.Column(db.String(50), nullable=False)
+    last_name = db.Column(db.String(50), nullable=False)
+    country = db.Column(db.String(50), nullable=False)
+    address = db.Column(db.String(200), nullable=False)
+    city = db.Column(db.String(100), nullable=False)
+    state = db.Column(db.String(100), nullable=False)
+    zipcode = db.Column(db.String(20), nullable=False)
+    phone = db.Column(db.String(20), nullable=False)
+    email = db.Column(db.String(120), nullable=False)
+    status = db.Column(db.Integer, default=0)  # 0 for ordered, 1 for shipped, 2 for delivered
+    
+    items = db.relationship('Item', secondary='order_item', backref='orders', lazy=True)
+
+    def __repr__(self):
+        return '<Order %r>' % self.id
+
+
+class PromoCode(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    code = db.Column(db.String(20), unique=True, nullable=False)
+    discount_percentage = db.Column(db.Float, nullable=False)
+
+    def __init__(self, code, discount_percentage):
+        self.code = code
+        self.discount_percentage = discount_percentage
+
+    def __repr__(self):
+        return f'<PromoCode {self.code}>'
+
+    @classmethod
+    def create(cls, code, discount_percentage):
+        promo_code = cls(code=code, discount_percentage=discount_percentage)
+        db.session.add(promo_code)
+        db.session.commit()
+        return promo_code
+
+    @classmethod
+    def get_by_code(cls, code):
+        return cls.query.filter_by(code=code).first()
+
+    def update(self, code, discount_percentage):
+        self.code = code
+        self.discount_percentage = discount_percentage
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()

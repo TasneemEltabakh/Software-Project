@@ -23,37 +23,35 @@
             </div>
         </div>
         <div class="row property__gallery">
-            {%for item in items%}
-             <div class="col-lg-3 col-md-4 col-sm-6 mix {{ categories[item.category_id - 1]|lower }}">
+            {% for item in items %}
+            <div class="col-lg-3 col-md-4 col-sm-6 mix {{ categories[item.category_id - 1]|lower }}">
                 <div class="product__item">
                     <div class="product__item__pic set-bg" data-setbg="{{item.image}}">
                         <div class="label new">New</div>
-     <ul class="product__hover">
-      
-
-   <img src="static/img/{{ item.image }}" alt="">
-   <br><br>
-   <form action="{{url_for('add_to_cart') }}" method="POST">
-    <input hidden name="itemnumber" value="{{item.id}}">
-    <button type="submit" class="site-btn">add to cart</button>
-</form>
-    
-</ul>
+                        <ul class="product__hover">
+                            <img src="static/img/{{ item.image }}" alt="">
+                            <br><br>
+                            <form action="{{url_for('product_main') }}" method="POST">
+                                <input type="hidden" name="item_id" value="{{item.id}}">
+                                <button type="submit" class="site-btn">add to cart</button>
+                            </form>
+                            
+                        </ul>
                     </div>
                     <div class="product__item__text">
                         <h6><a href="#">{{item.name}}</a></h6>
                         <div class="rating">
-                            {%set nums=range(1,item.rate)%}
-                            {%for num in nums%}
-                            <i class="fa fa-star"></i>
-                            
-                            {%endfor%}
+                            {% set nums = range(1, item.rate) %}
+                            {% for num in nums %}
+                                <i class="fa fa-star"></i>
+                            {% endfor %}
                         </div>
                         <div class="product__price">$ {{item.price}}</div>
                     </div>
                 </div>
             </div>
-            {%endfor%}
+        {% endfor %}
+        
         </div>
     </div>
 </section>

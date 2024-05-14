@@ -69,7 +69,10 @@
 
                                     <td class="cart__price">{{item.price}}</td>
                                    
-                                    <td class="cart__close"><span class="icon_close"></span></td>
+                                    <td ><form method="post" style="display: inline;">
+                                        <input type="hidden" name="delete_item_id" value="{{ item.id }}">
+                                        <button type="submit" class="delete-symbol" onclick="return confirm('Are you sure you want to delete this item?')">❌</button>
+                                    </form></td>
                                 </tr>
                                 {%endfor%}
                             </tbody>
@@ -84,9 +87,7 @@
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-6">
-                    <div class="cart__btn update__btn">
-                        <a href=""><span class="icon_loading"></span> Update cart</a>
-                    </div>
+                    
                 </div>
             </div>
             <div class="row">

@@ -43,23 +43,42 @@ def index():
     return render_template('index.html', login=int(login_flag))
 
 #MainProduct#
-@app.route('/productMain', methods=['GET'])
+@app.route('/productMain', methods=['GET', 'POST'])
 def product_main():
-   
+  
+    user_id = session.get('user_id')
+    
 
-    items= Item.query.all()
+    if user_id:
+        items = Item.query.filter(Item.user_id != user_id).all()
+    else:
+        items = Item.query.all()
+    
     categories = []
 
     for item in items:
         category = item.category_id  
-        if(category==1):
+        if category == 1:
             categories.append('women')
-        elif(category==2):
+        elif category == 2:
             categories.append('men')
-        elif(category==3):
+        elif category == 3:
             categories.append('kids')
 
-    return render_template('productMain.html',items=items, categories=categories)
+    if request.method == 'POST':
+        item_id = request.form.get('item_id')
+        item = Item.query.get(item_id)
+        
+        if item:
+            current_user = get_current_user()
+            if current_user:
+                user_id = current_user.id
+                newItemCart = Cart(item_id=item_id, user_id=user_id, total_payment=item.price)
+                db.session.add(newItemCart)
+                db.session.commit()
+                return redirect(url_for('cart'))
+
+    return render_template('productMain.html', items=items, categories=categories)
 
 #Contact#
 @app.route('/contact', methods=['GET', 'POST'])
@@ -80,39 +99,86 @@ def contact():
     return render_template('contact.html')
 
 #Cart#
-@app.route('/shop-cart',methods=['GET','POST'])
+
+
+@app.route('/shop-cart', methods=['GET', 'POST'])
 def cart():
-    if request.method=='GET':
-        # Get the current user ID from the session
-        user_id = session.get('user_id')
-
-        if user_id:
-          
-            items = Item.query.filter_by(user_id=user_id).all()
-            if not items:
-                flash('Your Cart is Empty')
-        else:
-            flash('You need to log in to view your cart.')
-            return redirect(url_for('login'))
-
-    elif request.method=='POST':
-      
-        if request.form['form_name'] == 'form1':
-            quantity = request.form.get('quantity')
+    if request.method == 'POST':
+        if 'delete_item_id' in request.form:
+            item_id = int(request.form['delete_item_id'])
+            user_id = session.get('user_id')
+            
+            if user_id:
+                # Delete the item from the cart
+                Cart.query.filter_by(user_id=user_id, item_id=item_id).delete()
+                db.session.commit()
+                flash('Item deleted from cart successfully!')
+            else:
+                flash('You need to log in to delete items from your cart.')
+            
+            return redirect(url_for('cart'))
+        
+    user_id = session.get('user_id')
+    if user_id:  
+        cart_items = Cart.query.filter_by(user_id=user_id).all()
+        if not cart_items:
+            flash('Your Cart is Empty')
+            return render_template('shop-cart.html', items=[])
+        item_ids = [item.item_id for item in cart_items]
+    
+        items = Item.query.filter(Item.id.in_(item_ids)).all()
+    else:
+        flash('You need to log in to view your cart.')
+        return redirect(url_for('login'))
 
     return render_template('shop-cart.html', items=items)
 
-
-#All Published Products#
-@app.route('/All_Published')
+#All published items
+@app.route('/All_Published', methods=['GET', 'POST'])
 def published():
+    if request.method == 'POST':
+      
+        if 'delete_item_id' in request.form:
+            item_id = int(request.form['delete_item_id'])
+            
+          
+            Cart.query.filter_by(item_id=item_id).delete()
+            db.session.commit()
+
+            
+            item = Item.query.get(item_id)
+            if item:
+                db.session.delete(item)
+                db.session.commit()
+                flash('Item deleted successfully!')
+            else:
+                flash('Item not found!')
+            return redirect(url_for('published'))
+
     user_id = session.get('user_id')
     items = Item.query.filter_by(user_id=user_id).all()
     if not items:
-        flash('You have nothing to sell ')      
+        flash('You have nothing to sell ')
+
     return render_template('All_Published.html', items=items)
 
+#Update published products
+@app.route('/UpdateProduct/<int:item_id>', methods=['GET', 'POST'])
+def update_product(item_id):
+    item = Item.query.get(item_id)
 
+    if request.method == 'POST':
+        name = request.form.get('name')
+        description = request.form.get('description')
+        price = float(request.form.get('price'))
+        item.name = name
+        item.description = description
+        item.price = price
+        db.session.commit()
+        flash('Product details updated successfully!')
+        return redirect(url_for('published'))
+
+    return render_template('UpdateProduct.html', item=item)
 #Checkout#
 @app.route('/checkout')
 def checkout():
@@ -225,25 +291,6 @@ def Additemtosell():
 
     return render_template('Sellitem.html')
 
-#Add element to cart from the product page
-@app.route('/productMain', methods=['POST'])
-def add_to_cart():
-    if request.method == 'POST':
-        item_id = request.form.get('itemnumber')
-        item = Item.query.filter_by(id=item_id).first()
-        current_user = get_current_user()
-        
-        if current_user:
-            user_id = current_user.id
-            newItemCart = Cart(item_id=item_id, user_id=user_id, total_payment=item.price)
-            db.session.add(newItemCart)
-            db.session.commit()
-            return redirect(url_for('cart'))
-        else:
-            flash('Please log in to add items to your cart.')
-            return redirect(url_for('login'))
-        
-    return render_template('productMain.html')
 
 #Function for getting the categry from the item id
 def get_category_name(category_id):

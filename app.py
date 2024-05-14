@@ -21,6 +21,7 @@ db.init_app(app)
 
 with app.app_context():
    db.create_all()
+
 ###########################
 #Pages:
 ###########################
@@ -138,7 +139,7 @@ def cart():
     return render_template('shop-cart.html', items=items, total_price=total_price)
 
 
-#All publis
+#All publish
 @app.route('/All_Published', methods=['GET', 'POST'])
 def published():
     if request.method == 'POST':
@@ -309,7 +310,6 @@ def profile():
              
             print('Flash message set')
             return redirect(url_for('profile'))
-    
     return render_template('Profile.html')
 
 #Register#

@@ -99,9 +99,12 @@
                         {% if current_user %}
                         <ul class="header__right__widget">
                             <li><span class="icon_search search-switch"></span></li>
-                            <li><a href="{{ url_for('cart') }}"><span class="icon_bag_alt"></span>
-                                <div class="tip">2</div>
-                            </a></li>
+                            <li>
+                                <a href="{{ url_for('cart') }}">
+                                    <span class="icon_bag_alt"></span>
+                                    <div class="tip">{{ cart_items|length }}</div>
+                                </a>
+                            </li>
                             <li><a href="{{ url_for('published') }}"><i class="fas fa-dollar-sign"></i></a></li>
                             <li> <div class="dropdown">
                                 <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

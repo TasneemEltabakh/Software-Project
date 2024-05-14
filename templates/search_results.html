@@ -35,8 +35,8 @@
                         <ul class="product__hover">
                             <img src="static/img/{{ item.image }}" alt="">
                             <br><br>
-                            <form action="{{ url_for('add_to_cart') }}" method="POST">
-                                <input hidden name="itemnumber" value="{{ item.id }}">
+                            <form action="{{url_for('product_main') }}" method="POST">
+                                <input type="hidden" name="item_id" value="{{item.id}}">
                                 <button type="submit" class="site-btn">add to cart</button>
                             </form>
                         </ul>

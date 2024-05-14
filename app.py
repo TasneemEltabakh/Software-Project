@@ -100,7 +100,6 @@ def contact():
 
 #Cart#
 
-
 @app.route('/shop-cart', methods=['GET', 'POST'])
 def cart():
     if request.method == 'POST':
@@ -118,22 +117,27 @@ def cart():
             
             return redirect(url_for('cart'))
         
+    # Handle GET request as before
     user_id = session.get('user_id')
     if user_id:  
         cart_items = Cart.query.filter_by(user_id=user_id).all()
         if not cart_items:
             flash('Your Cart is Empty')
-            return render_template('shop-cart.html', items=[])
+            return render_template('shop-cart.html', items=[], total_price=0)
         item_ids = [item.item_id for item in cart_items]
     
         items = Item.query.filter(Item.id.in_(item_ids)).all()
+
+        # Calculate total price of items in the cart
+        total_price = sum(item.price for item in items)
     else:
         flash('You need to log in to view your cart.')
         return redirect(url_for('login'))
 
-    return render_template('shop-cart.html', items=items)
+    return render_template('shop-cart.html', items=items, total_price=total_price)
 
-#All published items
+
+#All publis
 @app.route('/All_Published', methods=['GET', 'POST'])
 def published():
     if request.method == 'POST':

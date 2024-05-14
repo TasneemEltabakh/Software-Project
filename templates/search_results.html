@@ -1,0 +1,61 @@
+{% extends 'basic.html' %}
+
+{% block head %}
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          {% for message in messages %}
+            <div class="alert alert-success" role="alert">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endwith %}
+<!-- Product Section Begin -->
+<section class="product spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 col-md-4">
+                <div class="section-title">
+                    <h4>Search Results for "{{ query }}"</h4>
+                </div>
+            </div>
+        </div>
+        <div class="row property__gallery">
+            {% for item in items %}
+            <div class="col-lg-3 col-md-4 col-sm-6 mix {{ categories[item.category_id - 1]|lower }}">
+                <div class="product__item">
+                    <div class="product__item__pic set-bg" data-setbg="{{ item.image }}">
+                        <div class="label new">New</div>
+                        <ul class="product__hover">
+                            <img src="static/img/{{ item.image }}" alt="">
+                            <br><br>
+                            <form action="{{ url_for('add_to_cart') }}" method="POST">
+                                <input hidden name="itemnumber" value="{{ item.id }}">
+                                <button type="submit" class="site-btn">add to cart</button>
+                            </form>
+                        </ul>
+                    </div>
+                    <div class="product__item__text">
+                        <h6><a href="#">{{ item.name }}</a></h6>
+                        <div class="rating">
+                            {% set nums = range(1, item.rate) %}
+                            {% for num in nums %}
+                            <i class="fa fa-star"></i>
+                            {% endfor %}
+                        </div>
+                        <div class="product__price">$ {{ item.price }}</div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+<!-- Product Section End -->
+{% endblock %}

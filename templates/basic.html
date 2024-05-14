@@ -197,15 +197,17 @@
 <!-- Footer Section End -->
 
 <!-- Search Begin -->
+
 <div class="search-model">
     <div class="h-100 d-flex align-items-center justify-content-center">
         <div class="search-close-switch">+</div>
-        <form class="search-model-form">
-            <input type="text" id="search-input" placeholder="Search here.....">
+        <form class="search-model-form" action="{{ url_for('search') }}"  method="post">
+            <input type="text" id="search-input" name="query" placeholder="Search here.....">
+            <button type="submit">Search</button>
         </form>
     </div>
 </div>
-<!-- Search End -->
+
 
 <!-- Js Plugins -->
 <script src="static/js/jquery-3.3.1.min.js"></script>
@@ -224,11 +226,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
 <script>
     AOS.init({
-      // Global settings
-      offset: 200, // Offset (in px) from the original trigger point
-  
-      // Settings that can be overridden on a per-element basis
-      once: true, // Whether animation should happen only once - while scrolling down
+      offset: 200, 
+      once: true,
     });
   </script>
 </body>

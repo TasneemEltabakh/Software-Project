@@ -147,10 +147,14 @@ def profile():
             current_user.username = new_username
             current_user.password = new_password
             db.session.commit()
+            flash('Your data has been Updated successfully!')
+            print('Flash message set')
             return redirect(url_for('profile'))
         except IntegrityError as e:
             db.session.rollback()
             flash('Username already exists. Please choose a different username.')
+             
+            print('Flash message set')
             return redirect(url_for('profile'))
     
     return render_template('Profile.html')
@@ -216,21 +220,47 @@ def add_to_cart():
     if request.method == 'POST':
         item_id = request.form.get('itemnumber')
         item = Item.query.filter_by(id=item_id).first()
-        
-        # Get the current user object
         current_user = get_current_user()
         
         if current_user:
-            user_id = current_user.id  # Extract the user ID from the user object
+            user_id = current_user.id
             newItemCart = Cart(item_id=item_id, user_id=user_id, total_payment=item.price)
             db.session.add(newItemCart)
             db.session.commit()
             return redirect(url_for('cart'))
         else:
-            # Handle the case where no user is logged in
             flash('Please log in to add items to your cart.')
             return redirect(url_for('login'))
-   
+        
+    return render_template('productMain.html')
+def get_category_name(category_id):
+    if category_id == 1:
+        return 'Women'
+    elif category_id == 2:
+        return 'Men'
+    elif category_id == 3:
+        return 'Kids'
+    else:
+        return 'Other'
+#Search
+@app.route('/basic',methods=['POST'])
+def search():
+    query = request.form.get('query', '').strip()
+    if query:
+        items = Item.query.filter(
+            (Item.name.ilike(f'%{query}%')) |
+            (Item.description.ilike(f'%{query}%'))
+        ).all()
+       
+        if items:
+            categories = [get_category_name(item.category_id) for item in items]
+            return render_template('search_results.html', items=items, categories=categories, query=query)
+        else:
+            flash('No results found for "{}"'.format(query))
+            return render_template('search_results.html')
+        return redirect(request.referrer or url_for('index'))
+
+
 ###########################
 #running the application:
 ###########################

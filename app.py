@@ -31,7 +31,7 @@ def get_current_user():
         return User.query.get(user_id)
     return None  # Return None if no user is logged in
 
-# Pass user object to all templates using context processor
+# Pass user object to all Pages to achieve session
 @app.context_processor
 def inject_user():
     return dict(current_user=get_current_user())
@@ -58,8 +58,7 @@ def product_main():
             categories.append('men')
         elif(category==3):
             categories.append('kids')
-   
-        
+
     return render_template('productMain.html',items=items, categories=categories)
 
 #Contact#
@@ -73,7 +72,7 @@ def contact():
         db.session.add(contact_message)
         db.session.commit()
 
-        # [show message ]
+      
         flash('Your message has been sent successfully!')
         print('Flash message set')
         return redirect(url_for('contact'))
@@ -88,7 +87,7 @@ def cart():
         user_id = session.get('user_id')
 
         if user_id:
-            # Retrieve items in the cart for the current user
+          
             items = Item.query.filter_by(user_id=user_id).all()
             if not items:
                 flash('Your Cart is Empty')
@@ -97,17 +96,29 @@ def cart():
             return redirect(url_for('login'))
 
     elif request.method=='POST':
-        # Process POST request for adding items to the cart
+      
         if request.form['form_name'] == 'form1':
             quantity = request.form.get('quantity')
 
     return render_template('shop-cart.html', items=items)
+
+
+#All Published Products#
+@app.route('/All_Published')
+def published():
+    user_id = session.get('user_id')
+    items = Item.query.filter_by(user_id=user_id).all()
+    if not items:
+        flash('You have nothing to sell ')      
+    return render_template('All_Published.html', items=items)
+
 
 #Checkout#
 @app.route('/checkout')
 def checkout():
     return render_template('checkout.html')
 
+#Login
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -119,7 +130,7 @@ def login():
         if user and user.password == password:
             # Successful login, set user ID in session
             session['user_id'] = user.id
-            return redirect(url_for('index'))  # Redirect to index after successful login
+            return redirect(url_for('index'))  
         else:
             # Invalid credentials
             return render_template('login.html', error='Invalid credentials')
@@ -132,8 +143,8 @@ def logout():
     
     session.pop('user_id', None)
     return redirect(url_for('index'))
-#Profile
 
+#Profile
 @app.route('/Profile', methods=['GET', 'POST'])
 def profile():
     if request.method == 'POST':
@@ -196,14 +207,13 @@ def Additemtosell():
             price = 0
         else:
             price = request.form.get('priceInput')
-         
-        rate = request.form.get('rating')
+
+        user_id = session.get('user_id')
+        rate =int(request.form.get('rating')) + 1
 
         image = request.form.get(f'imageUpload0')
 
-            
-
-        newItem = Item(name=title, description= discription, price=price, image= image, quantity=1, rate=rate, category_id=int(type), user_id=1 )
+        newItem = Item(name=title, description= discription, price=price, image= image, quantity=1, rate=rate, category_id=int(type), user_id=user_id )
  
         db.session.add(newItem)
         db.session.commit()
@@ -215,6 +225,7 @@ def Additemtosell():
 
     return render_template('Sellitem.html')
 
+#Add element to cart from the product page
 @app.route('/productMain', methods=['POST'])
 def add_to_cart():
     if request.method == 'POST':
@@ -233,6 +244,8 @@ def add_to_cart():
             return redirect(url_for('login'))
         
     return render_template('productMain.html')
+
+#Function for getting the categry from the item id
 def get_category_name(category_id):
     if category_id == 1:
         return 'Women'

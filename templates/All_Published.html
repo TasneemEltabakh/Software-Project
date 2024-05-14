@@ -1,0 +1,94 @@
+{% extends 'basic.html' %}
+{% block head %}
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          {% for message in messages %}
+            <div class="alert alert-success" role="alert">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endwith %}
+{% endblock %}
+
+{% block content %}
+    <!-- Breadcrumb Begin -->
+    <div class="breadcrumb-option">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="breadcrumb__links">
+                        <a href="{{ url_for('index') }}"><i class="fa fa-home"></i> Home</a>
+                        <span>All Published Products</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Breadcrumb End -->
+
+    <!-- Shop Cart Section Begin -->
+    <section class="shop-cart spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="shop__cart__table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Description</th>
+                                    <th>Price</th>
+                                    <th>Update</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in items %}
+                                    <tr>
+                                        <td class="cart__product__item">
+                                            <img src="{{ item.image }}" alt="">
+                                            <div class="cart__product__item__title" class="col-8">
+                                                <h6>{{ item.name }}</h6>
+                                                <div class="rating">
+                                                    {% set nums = range(1, item.rate) %}
+                                                    {% for num in nums %}
+                                                        <i class="fa fa-star"></i>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="item_description"><span id="total-{{ item.id }}">{{ item.description }}</span></td>
+                                        <td class="cart__price">{{ item.price }}</td>
+                                        <td class="cart__update">
+                                            <form action="{{ url_for('update_product', item_id=item.id) }}" method="POST">
+                                                <!-- Add input fields for updating product details -->
+                                                <input type="text" name="new_name" placeholder="New Name">
+                                                <input type="text" name="new_description" placeholder="New Description">
+                                                <input type="text" name="new_price" placeholder="New Price">
+                                                <button type="submit">Update</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <div class="cart__btn">
+                        <a href="/">Continue Shopping</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Shop Cart Section End -->
+{% endblock %}

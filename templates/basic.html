@@ -100,9 +100,9 @@
                         <ul class="header__right__widget">
                             <li><span class="icon_search search-switch"></span></li>
                             <li>
-                                <a href="{{ url_for('cart') }}">
+                                <a href="{{url_for('cart') }}">
                                     <span class="icon_bag_alt"></span>
-                                    <div class="tip">{{ cart_items|length }}</div>
+                                    <div class="tip">{{ session['cart_items_count'] }}</div>
                                 </a>
                             </li>
                             <li><a href="{{ url_for('published') }}"><i class="fas fa-dollar-sign"></i></a></li>

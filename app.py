@@ -4,7 +4,7 @@
 ###########################
 
 from flask import Flask, render_template, url_for, redirect , request , flash, session, jsonify
-from models import db, User
+from models import db, User, PromoCode
 from werkzeug.security import check_password_hash
 from config import Config
 from models import ContactMessage, User, Item, Category,Order,Review,Message,Cart
@@ -101,7 +101,6 @@ def contact():
     return render_template('contact.html')
 
 #Cart#
-
 @app.route('/shop-cart', methods=['GET', 'POST'])
 def cart():
     if request.method == 'POST':
@@ -118,26 +117,43 @@ def cart():
                 flash('You need to log in to delete items from your cart.')
             
             return redirect(url_for('cart'))
-        
+        elif 'promo_code' in request.form:
+            promo_code = request.form.get('promo_code')
+            promo = PromoCode.get_by_code(promo_code)
+            if promo:
+                session['promo_code'] = promo.code
+                flash('Promo code applied successfully!')
+            else:
+                flash('Invalid promo code. Please try again.', 'error')
+
     # Handle GET request as before
     user_id = session.get('user_id')
     if user_id:  
         cart_items = Cart.query.filter_by(user_id=user_id).all()
+        cart_items_count = len(cart_items)
+        session['cart_items_count'] = cart_items_count
         if not cart_items:
             flash('Your Cart is Empty')
             return render_template('shop-cart.html', items=[], total_price=0)
         item_ids = [item.item_id for item in cart_items]
     
         items = Item.query.filter(Item.id.in_(item_ids)).all()
-
+       
         # Calculate total price of items in the cart
         total_price = sum(item.price for item in items)
+        promo_code = session.get('promo_code')
+        if promo_code:
+            promo = PromoCode.get_by_code(promo_code)
+            if promo:
+                discount_percentage = promo.discount_percentage
+                discount = total_price * (discount_percentage / 100)
+                total_price -= discount      
+
     else:
         flash('You need to log in to view your cart.')
         return redirect(url_for('login'))
 
     return render_template('shop-cart.html', items=items, total_price=total_price)
-
 
 #All publish
 @app.route('/All_Published', methods=['GET', 'POST'])
@@ -190,14 +206,15 @@ def update_product(item_id):
 #Checkout#
 @app.route('/checkout', methods=['GET', 'POST'])
 def checkout():
+
     user_id = session.get('user_id')
+    total_price_with_tax = float(request.args.get('total_price', 0))
     cart_items = Cart.query.filter_by(user_id=user_id).all()
     items = []
     total_price = 0
     for cart_item in cart_items:
         item = Item.query.get(cart_item.item_id)
         items.append(item)
-        total_price += item.price
     
         if request.method == 'POST':
                 required_fields = ['first_name', 'last_name', 'country', 'address', 'city', 'state', 'zipcode', 'phone', 'email']
@@ -219,10 +236,6 @@ def checkout():
                 
                 total_price = 0
                 cart_items = Cart.query.filter_by(user_id=user_id).all()
-                for cart_item in cart_items:
-                    item = Item.query.get(cart_item.item_id)
-                    total_price += item.price
-
                 
                 order = Order(
                     buyer_id=user_id,
@@ -253,7 +266,7 @@ def checkout():
                 flash('Your order has been placed successfully!')
                 return render_template('OrderTracking.html', order=order)
     
-    return render_template('checkout.html', items=items, total_price=total_price)
+    return render_template('checkout.html', items=items, total_price= total_price_with_tax)
 
     
 #OrderTracking

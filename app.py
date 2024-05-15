@@ -49,10 +49,17 @@ def index():
 def product_main():
   
     user_id = session.get('user_id')
-    
+    user_phone_numbers = {}
+
 
     if user_id:
         items = Item.query.filter(Item.user_id != user_id).all()
+        for item in items:
+            user = User.query.get(item.user_id)
+            if user:
+                user_phone_numbers[item.id] = user.phone_number
+        
+        
     else:
         items = Item.query.all()
     
@@ -80,7 +87,7 @@ def product_main():
                 db.session.commit()
                 return redirect(url_for('cart'))
 
-    return render_template('productMain.html', items=items, categories=categories)
+    return render_template('productMain.html', items=items, categories=categories,user_phone_numbers=user_phone_numbers)
 
 #Contact#
 @app.route('/contact', methods=['GET', 'POST'])

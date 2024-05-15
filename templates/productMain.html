@@ -1,5 +1,20 @@
 {% extends 'basic.html' %}
 {% block head %}
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          {% for message in messages %}
+            <div class="alert alert-success" role="alert">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endwith %}
 
 <!-- Product Section Begin -->
 <section class="product spad">
@@ -34,6 +49,7 @@
                             <form action="{{url_for('product_main') }}" method="POST">
                                 <input type="hidden" name="item_id" value="{{item.id}}">
                                 <button type="submit" class="site-btn">add to cart</button>
+                                <a href="tel:{{user_phone_numbers[item.id] }}" class="site-btn">Call</a>
                             </form>
                             
                         </ul>

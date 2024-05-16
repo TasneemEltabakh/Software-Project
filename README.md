@@ -93,6 +93,7 @@ project-root/
 ├── test.py
 ├── config.py
 ├── README.md
+├── requirements.txt
 └── azure-pipline
 ```
 

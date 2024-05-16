@@ -1,9 +1,9 @@
 # Software-Project :
 This Project is a Fashion Trading website where users can upload clothing items with a description and rate and exchange these items with another user's items with similar rate.
 
-# Table of Contents:
-1. Installation
-2. Configuration
+## Table of Contents:
+1. [Installation](#installation)
+2. [Configuration](#configration)
 3. Usage
 4. Features
 5. Directory structure
@@ -11,15 +11,16 @@ This Project is a Fashion Trading website where users can upload clothing items 
 7. How Badelha works
 8. License
 
-# Installation
-## Prerequisites
+## Installation
+### Prerequisites
 - Python 3.7 or higher
 - Flask
 - SQLAlchemy
 
-## Steps
-1. Clonning:
-https://github.com/TasneemEltabakh/Software-Project.git
+### Steps
+1. **Clonning:**
+'''sh
+ git clone https://github.com/TasneemEltabakh/Software-Project.git
 
 2. Create a virtual environment:
 python -m venv venv

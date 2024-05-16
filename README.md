@@ -3,11 +3,11 @@ This Project is a Fashion Trading website where users can upload clothing items 
 
 ## Table of Contents:
 1. [Installation](#installation)
-2. [Configuration](#configration)
-3. [Accessing the Application](#Application)
-4. [Directory structure](#DirectoryStructure)
-6. [How Badelha works](#Badelha)
-7. License
+2. [Configuration](#configuration)
+3. [Accessing the Application](#application)
+4. [Directory Structure](#directory-structure)
+5. [How Badelha works](#how-badelha-works)
+6. [License](#license)
 
 ## Installation
 ### Prerequisites

@@ -62,40 +62,36 @@ http://127.0.0.1:5000
 project-root/
 │
 ├── templates/
-│       |
-│       ├── index.html
-│       ├── productMain.html
-│       ├── contact.html
-│       ├── shop-cart.html
-│       ├── All_Published.html
-│       ├── UpdateProduct.html
-│       ├── About.html
-|       ├── basic.html
-|       ├── Login.html
-|       ├── main.html
-|       ├── Product-details.html
-|       ├── Profile.html
-|       ├── Register.html
-|       ├── search-results.html
-|       ├── SellItem.html
-|       ├── shop.html
-│       └── OrderTracking.html
-│   
-|
+│ ├── index.html
+│ ├── productMain.html
+│ ├── contact.html
+│ ├── shop-cart.html
+│ ├── All_Published.html
+│ ├── UpdateProduct.html
+│ ├── About.html
+│ ├── basic.html
+│ ├── Login.html
+│ ├── main.html
+│ ├── Product-details.html
+│ ├── Profile.html
+│ ├── Register.html
+│ ├── search-results.html
+│ ├── SellItem.html
+│ ├── shop.html
+│ └── OrderTracking.html
+│
 ├── static/
-|        |
-│       ├── css
-│       ├── fonts
-│       ├── contact.html
-│       ├── img
-│       ├── js
-│       ├── sass
-|        └── Source
-|
+│ ├── css/
+│ ├── fonts/
+│ ├── img/
+│ ├── js/
+│ ├── sass/
+│ └── Source/
+│
 ├── models.py
 ├── app.py
 ├── test.py
-├── config.py 
+├── config.py
 ├── README.md
 └── azure-pipline
 

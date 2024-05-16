@@ -1,44 +1,88 @@
-
-###########################
-#importing:
-###########################
-
-from flask import Flask, render_template, url_for, redirect , request , flash, session, jsonify
-from models import db, User, PromoCode
+#################################
+#Importing required libraries
+################################
+from flask import Flask, render_template, url_for, redirect, request, flash, session
+from models import db, User, PromoCode, ContactMessage, Item, Cart, Order
 from werkzeug.security import check_password_hash
 from config import Config
-from models import ContactMessage, User, Item, Category,Order,Review,Message,Cart
 from sqlalchemy.exc import IntegrityError
 from datetime import datetime
 
-app = Flask(__name__)
-#remeber to make it hidden on pupblic [important]
-app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'  # Secret key for session encryption
-app.config['SECRET_KEY'] = b'_5#y2L"F4Q8z\n\xec]/'
+
+###################################################
+#Design Patterns templates 
+###################################################
+#1.Singlton 
+app = Flask(__name__) #application instance.
+
+app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 app.config.from_object(Config)
-
 db.init_app(app)
-
 with app.app_context():
-   db.create_all()
+    db.create_all()
 
-###########################
-#Pages:
-###########################
 
-# Function to get the current user object based on the user ID stored in the session
+#2. Factory design Pattern
+
+class ItemFactory:
+    @staticmethod
+    def create_item(name, description, price, image, quantity, rate, category_id, user_id):
+        return Item(name=name, description=description, price=price, image=image, quantity=quantity, rate=rate, category_id=category_id, user_id=user_id)
+
+class MessageFactory:
+    @staticmethod
+    def create_message(name, email, message):
+        return ContactMessage(name=name, email=email, message=message)
+
+#3. Strategy design Pattern
+
+class CheckoutStrategy:
+    def apply_strategy(self, total_price):
+        raise NotImplementedError
+
+class DefaultCheckoutStrategy(CheckoutStrategy):
+    def apply_strategy(self, total_price):
+        return total_price
+
+class DiscountCheckoutStrategy(CheckoutStrategy):
+    def __init__(self, discount_percentage):
+        self.discount_percentage = discount_percentage
+
+    def apply_strategy(self, total_price):
+        # Calculate the discounted price
+        discount_amount = total_price * (self.discount_percentage / 100)
+        discounted_price = total_price - discount_amount
+        return discounted_price
+
+#################################
+#Helping Functions
+#################################
 def get_current_user():
     if 'user_id' in session:
         user_id = session['user_id']
         return User.query.get(user_id)
-    return None  # Return None if no user is logged in
+    return None
 
-# Pass user object to all Pages to achieve session
 @app.context_processor
 def inject_user():
     return dict(current_user=get_current_user())
 
-#index#
+def get_category_name(category_id):
+    if category_id == 1:
+        return 'women'
+    elif category_id == 2:
+        return 'men'
+    elif category_id == 3:
+        return 'kid'
+    else:
+        return 'Other'
+
+
+####################################
+#Pages
+####################################
+
+#index
 @app.route('/')
 def index():
     login_flag = request.args.get('login', 0)  
@@ -47,11 +91,11 @@ def index():
 #MainProduct#
 @app.route('/productMain', methods=['GET', 'POST'])
 def product_main():
-  
+
+    #first, we see that if this user is logged in
     user_id = session.get('user_id')
+    #get all numbers for the users who published products
     user_phone_numbers = {}
-
-
     if user_id:
         items = Item.query.filter(Item.user_id != user_id).all()
         for item in items:
@@ -63,8 +107,8 @@ def product_main():
     else:
         items = Item.query.all()
     
+    # this function for filtering in the front end  
     categories = []
-
     for item in items:
         category = item.category_id  
         if category == 1:
@@ -73,7 +117,8 @@ def product_main():
             categories.append('men')
         elif category == 3:
             categories.append('kids')
-
+    
+    #if add to cart
     if request.method == 'POST':
         item_id = request.form.get('item_id')
         item = Item.query.get(item_id)
@@ -89,29 +134,29 @@ def product_main():
 
     return render_template('productMain.html', items=items, categories=categories,user_phone_numbers=user_phone_numbers)
 
-#Contact#
+#contact page
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
     if request.method == 'POST':
         name = request.form.get('name')
         email = request.form.get('email')
         message = request.form.get('message')
-        contact_message = ContactMessage(name=name, email=email, message=message)
+        contact_message = MessageFactory.create_message(name=name, email=email, message=message)
         db.session.add(contact_message)
         db.session.commit()
-
-      
         flash('Your message has been sent successfully!')
-        print('Flash message set')
         return redirect(url_for('contact'))
-
     return render_template('contact.html')
+
 
 #Cart#
 @app.route('/shop-cart', methods=['GET', 'POST'])
 def cart():
+    #if any button is pressed
     if request.method == 'POST':
+        #if this button was for delete
         if 'delete_item_id' in request.form:
+            #get the item id you want to delete and the user id for the person who wants to delete
             item_id = int(request.form['delete_item_id'])
             user_id = session.get('user_id')
             
@@ -124,9 +169,13 @@ def cart():
                 flash('You need to log in to delete items from your cart.')
             
             return redirect(url_for('cart'))
+        
+        #if the button was applying the promocode
         elif 'promo_code' in request.form:
+            #get the entered promocode
             promo_code = request.form.get('promo_code')
             promo = PromoCode.get_by_code(promo_code)
+            #if this is a valid promocode
             if promo:
                 session['promo_code'] = promo.code
                 flash('Promo code applied successfully!')
@@ -135,9 +184,11 @@ def cart():
 
     # Handle GET request as before
     user_id = session.get('user_id')
-    if user_id:  
+    if user_id:
+        # this is for showing all the products you put in the cart  
         cart_items = Cart.query.filter_by(user_id=user_id).all()
         cart_items_count = len(cart_items)
+        #this item counts for the header icon
         session['cart_items_count'] = cart_items_count
         if not cart_items:
             flash('Your Cart is Empty')
@@ -149,6 +200,8 @@ def cart():
         # Calculate total price of items in the cart
         total_price = sum(item.price for item in items)
         promo_code = session.get('promo_code')
+        
+        #if the promocode is valid, apply the discount
         if promo_code:
             promo = PromoCode.get_by_code(promo_code)
             if promo:
@@ -162,19 +215,21 @@ def cart():
 
     return render_template('shop-cart.html', items=items, total_price=total_price)
 
+
 #All publish
 @app.route('/All_Published', methods=['GET', 'POST'])
 def published():
     if request.method == 'POST':
-      
+        
+        #if the user who published the item wants to delete it
         if 'delete_item_id' in request.form:
             item_id = int(request.form['delete_item_id'])
             
-          
+            #it will be also deleted from the cart if any one puts it in
             Cart.query.filter_by(item_id=item_id).delete()
             db.session.commit()
 
-            
+            #then delete it itself
             item = Item.query.get(item_id)
             if item:
                 db.session.delete(item)
@@ -183,7 +238,8 @@ def published():
             else:
                 flash('Item not found!')
             return redirect(url_for('published'))
-
+        
+    #after that, the items are updated to give the list without the deleted one 
     user_id = session.get('user_id')
     items = Item.query.filter_by(user_id=user_id).all()
     if not items:
@@ -191,9 +247,12 @@ def published():
 
     return render_template('All_Published.html', items=items)
 
-#Update published products
+
+#Update published products by the selected id, so we passed the id to the backend 
 @app.route('/UpdateProduct/<int:item_id>', methods=['GET', 'POST'])
 def update_product(item_id):
+
+    #getting all the data of the choosen id
     item = Item.query.get(item_id)
 
     if request.method == 'POST':
@@ -210,10 +269,11 @@ def update_product(item_id):
 
     return render_template('UpdateProduct.html', item=item)
 
+
 #Checkout#
 @app.route('/checkout', methods=['GET', 'POST'])
 def checkout():
-
+    # get the user id to filter his cart contents to the checkout
     user_id = session.get('user_id')
     total_price_with_tax = float(request.args.get('total_price', 0))
     cart_items = Cart.query.filter_by(user_id=user_id).all()
@@ -222,7 +282,8 @@ def checkout():
     for cart_item in cart_items:
         item = Item.query.get(cart_item.item_id)
         items.append(item)
-    
+        
+        # this is mainly for the required fields 
         if request.method == 'POST':
                 required_fields = ['first_name', 'last_name', 'country', 'address', 'city', 'state', 'zipcode', 'phone', 'email']
                 for field in required_fields:
@@ -244,6 +305,7 @@ def checkout():
                 total_price = 0
                 cart_items = Cart.query.filter_by(user_id=user_id).all()
                 
+                # this is very  important for creating an order if the place order is pressesd
                 order = Order(
                     buyer_id=user_id,
                     date=datetime.utcnow(),
@@ -260,11 +322,13 @@ def checkout():
                 )
                 db.session.add(order)
 
+                #after the order is added, the cart must be cleared
                 for cart_item in cart_items:
                     item_id = cart_item.item_id
                     Cart.query.filter_by(item_id=item_id).delete()
                     db.session.commit()
 
+                    # also, as our brand mainly depend on the used or second hand items so there is only one item so it will be deleted if ordered
                     item = Item.query.get(item_id)
                     if item:
                         db.session.delete(item)
@@ -287,7 +351,8 @@ def login():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['pass']
-
+        
+        #this is for authentication if the user is registered or not
         user = User.query.filter_by(email=email).first()
 
         if user and user.password == password:
@@ -303,7 +368,7 @@ def login():
 # Logout
 @app.route('/logout')
 def logout():
-    
+    # to logout this means the userid is popped from the current sessions
     session.pop('user_id', None)
     return redirect(url_for('index'))
 
@@ -352,10 +417,10 @@ def register():
 
 
 
-
 #Sell New Item#
 @app.route('/Sellitem', methods=['GET', 'POST'])
 def Additemtosell():
+    #to sell item then when add item button is clicked this will happen
     if request.method == 'POST':
         title = request.form.get('title')
         email = request.form.get('email')
@@ -365,6 +430,8 @@ def Additemtosell():
         location = request.form.get('location')
         status = request.form.get('itemStatus')
         priceType = int(request.form.get('priceType'))  
+
+        #if the choosen type is free, then the price is set to 0
         if(priceType==0):
             price = 0
         else:
@@ -375,6 +442,7 @@ def Additemtosell():
 
         image = request.form.get(f'imageUpload0')
 
+        #creating the new item in the database
         newItem = Item(name=title, description= discription, price=price, image= image, quantity=1, rate=rate, category_id=int(type), user_id=user_id )
  
         db.session.add(newItem)
@@ -388,26 +456,20 @@ def Additemtosell():
     return render_template('Sellitem.html')
 
 
-#Function for getting the categry from the item id
-def get_category_name(category_id):
-    if category_id == 1:
-        return 'Women'
-    elif category_id == 2:
-        return 'Men'
-    elif category_id == 3:
-        return 'Kids'
-    else:
-        return 'Other'
+
 #Search
 @app.route('/basic',methods=['POST'])
 def search():
+    #this is to get the query from the search and strip it
     query = request.form.get('query', '').strip()
+    #then start to match the query with the name or description
     if query:
         items = Item.query.filter(
             (Item.name.ilike(f'%{query}%')) |
             (Item.description.ilike(f'%{query}%'))
         ).all()
-       
+        
+        #after that we got all the matched items to appear in the search result page
         if items:
             categories = [get_category_name(item.category_id) for item in items]
             return render_template('search_results.html', items=items, categories=categories, query=query)
@@ -417,9 +479,5 @@ def search():
         return redirect(request.referrer or url_for('index'))
 
 
-###########################
-#running the application:
-###########################
-
-if __name__ == "__main__": #run the application dynamically
-    app.run(debug=True) #to run in debug mode
+if __name__ == "__main__":
+    app.run(debug=True)

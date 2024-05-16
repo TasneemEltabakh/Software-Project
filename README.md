@@ -19,8 +19,8 @@ This Project is a Fashion Trading website where users can upload clothing items 
 
 ### Steps
 1. **Clonning:**
-'''sh
- git clone https://github.com/TasneemEltabakh/Software-Project.git
+ ```sh
+   git https://github.com/TasneemEltabakh/Software-Project.git
 
 2. Create a virtual environment:
 python -m venv venv

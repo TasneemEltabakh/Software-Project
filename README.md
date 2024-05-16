@@ -58,7 +58,7 @@ after every thing is done, you can:
 http://127.0.0.1:5000
  ``` 
 ## Directory Structure:
-
+```
 project-root/
 │
 ├── templates/
@@ -94,6 +94,7 @@ project-root/
 ├── config.py
 ├── README.md
 └── azure-pipline
+```
 
 ## How Badelha works:
 

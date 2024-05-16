@@ -29,8 +29,8 @@ python -m venv venv
 ```sh
 venv\Scripts\activate
  ``` 
- ```sh
 - On macOS/Linux
+ ```sh
 source venv/bin/activate
  ``` 
 4. ***Set up the database:***

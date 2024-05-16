@@ -4,12 +4,10 @@ This Project is a Fashion Trading website where users can upload clothing items 
 ## Table of Contents:
 1. [Installation](#installation)
 2. [Configuration](#configration)
-3. Usage
-4. Features
-5. Directory structure
-6. Contributing
-7. How Badelha works
-8. License
+3. [Accessing the Application](#Application)
+4. [Directory structure](#DirectoryStructure)
+6. [How Badelha works](#Badelha)
+7. License
 
 ## Installation
 ### Prerequisites
@@ -31,24 +29,77 @@ python -m venv venv
 ```sh
 venv\Scripts\activate
  ``` 
+ ```sh
 - On macOS/Linux
 source venv/bin/activate
-
-4. Set up the database:
-
+ ``` 
+4. ***Set up the database:***
+```sh
 python 
 from app import app
 from models import db
 with app.app_context():   
-    #db.create_all()
+    db.create_all()
+``` 
 
 
-5. Run the application:
+5. ***Run the application:***
+```sh
 python app.py
+ ``` 
+## Configuration:
 
+The application configuration is managed through the Config class in config.py. You can modify this file to change settings such as the database URl, secret key, and other application-specific settings.
 
+## Application:
+after every thing is done, you can:
+- Open your web browser and navigate to 
+```sh
+http://127.0.0.1:5000
+ ``` 
+## Directory Structure:
 
-# How Badelha works:
+project-root/
+│
+├── templates/
+│       |
+│       ├── index.html
+│       ├── productMain.html
+│       ├── contact.html
+│       ├── shop-cart.html
+│       ├── All_Published.html
+│       ├── UpdateProduct.html
+│       ├── About.html
+|       ├── basic.html
+|       ├── Login.html
+|       ├── main.html
+|       ├── Product-details.html
+|       ├── Profile.html
+|       ├── Register.html
+|       ├── search-results.html
+|       ├── SellItem.html
+|       ├── shop.html
+│       └── OrderTracking.html
+│   
+|
+├── static/
+|        |
+│       ├── css
+│       ├── fonts
+│       ├── contact.html
+│       ├── img
+│       ├── js
+│       ├── sass
+|        └── Source
+|
+├── models.py
+├── app.py
+├── test.py
+├── config.py 
+├── README.md
+└── azure-pipline
+
+## How Badelha works:
 
 Upload and Rate: Users can easily upload photos of their clothes along with a rating (1-5) based on their condition. This system ensures transparency and helps users find the perfect items.
 Trade Options: We offer two convenient options for trading. Users can choose to ship their items or arrange meet-ups with other users for an in-person exchange. We facilitate safe and secure transactions to ensure a smooth trading experience.
@@ -57,16 +108,13 @@ Join us on this exciting journey towards a more sustainable future. Together, we
 
 Let's make fashion sustainable, stylish, and socially responsible with Badelha!
 
-#how to run the code
--first connect to the database on phy my admin using a server (we used Xampp)
--run this in the terminal to create the database
--python 
-from app import app
-from models import db
+## License:
+This project is licensed under the MIT License. See the LICENSE file for more information.
 
-with app.app_context():
-    
-    #db.create_all()
--Now the database should be created and connected
--Run python app.py 
--open your local host to view the website
+---
+Please don't hesitate to reach out if you require any further assistance.
+
+- s-tasneem.attia@zewailcity.edu.eg
+- s-rghda.ahmed@zewailcity.edu.eg
+- s-nada.soudi@zewailcity.edu.eg
+- s-nourhan.mahgoub@zewailcity.edu.eg

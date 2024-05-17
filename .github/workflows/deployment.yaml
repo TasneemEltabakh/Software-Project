@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hellodocker2-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hellodocker2
+  template:
+    metadata:
+      labels:
+        app: hellodocker2
+    spec:
+      containers:
+        - name: hellodocker2
+          image: badelhadocker.azurecr.io/hellodocker2:<IMAGE_TAG>
+          ports:
+            - containerPort: 80

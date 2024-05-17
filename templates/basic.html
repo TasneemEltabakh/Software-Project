@@ -3,12 +3,12 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="description" content="Ashion Template">
-    <meta name="keywords" content="Ashion, unica, creative, html">
+    <meta name="description" content="Software Engineering Project">
+    <meta name="keywords" content="software, fashion, tasneem, nourhan, nada, rghda">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Badelha | بدلها</title>
-
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='F.adobe.png') }}">
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Cookie&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap"
@@ -166,8 +166,8 @@
             <div class="col-lg-4 col-md-4 col-sm-4" data-aos="slide-top" data-aos-delay="500">
                 <div class="footer__newslatter">
                     <h6 style="color: #000000;">Subscribe</h6>
-                    <form action="{{ url_for('subscribe') }}" method="post">
-                        <input type="email" name="email" placeholder="Enter your email...">
+                    <form action="{{url_for('subscribe') }}" method="post">
+                        <input type="email" name="email1" placeholder="Enter your email...">
                         <button type="submit" class="site-btn">Subscribe</button>
                     </form>
                     <div class="footer__social">

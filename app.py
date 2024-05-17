@@ -480,10 +480,10 @@ def search():
 
 
 #Subscribe
-@app.route('/basic',methods=['POST'])
+@app.route('/subscribtion',methods=['POST'])
 def subscribe():
     if request.method == 'POST':
-        email = request.form.get('email')
+        email = request.form.get('email1')
 
         # Check if the email is already subscribed
         existing_subscription = Subscription.query.filter_by(user_email=email).first()
@@ -500,7 +500,7 @@ def subscribe():
             flash('You have been successfully subscribed!')
 
         # Redirect to the appropriate page after subscription
-        return redirect(url_for('index'))
+    return render_template('index.html')
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)

@@ -8,7 +8,7 @@ jobs: # Define list of actions to happen
   build:
     runs-on: ubuntu-latest # OS that action runs on
     steps:
-    - uses: actions/checkout@v2. # Triggerning external action
+    - uses: actions/checkout@v4. # Triggerning external action
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
@@ -24,7 +24,7 @@ jobs: # Define list of actions to happen
     needs: build # Build step should be done first
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Deploy to Staging
       env:
         STAGING_HOST: ${{ secrets.STAGING_HOST }}

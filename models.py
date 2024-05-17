@@ -91,7 +91,7 @@ class Cart(db.Model):
     total_payment=db.Column(db.Integer,nullable=False)
     user_id=db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     item_id=db.Column(db.Integer, db.ForeignKey('item.id'), nullable=False)
- 
+
     def __repr__(self):
         return f'<Cart {self.id}>'
 
@@ -122,6 +122,12 @@ class Order(db.Model):
     def __repr__(self):
         return '<Order %r>' % self.id
 
+class Subscription(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_email=db.Column(db.String(120), unique=True, nullable=False)
+    
+    def __repr__(self):
+        return '<Order %r>' % self.id
 
 class PromoCode(db.Model):
     id = db.Column(db.Integer, primary_key=True)

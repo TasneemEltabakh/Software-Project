@@ -13,7 +13,7 @@ from datetime import datetime
 #Design Patterns templates 
 ###################################################
 #1.Singlton 
-app = Flask(__name__) #application instance.
+app = Flask(__name__, static_url_path='/static', static_folder='static')#application instance.
 
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 app.config.from_object(Config)

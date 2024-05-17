@@ -39,16 +39,16 @@ jobs:
     - name: Docker Login
       uses: azure/docker-login@v1
       with:
-        login-server: ${{ secrets.AZURE_ACR_LOGIN_SERVER }}
+        login-server: badelhadocker.azurecr.io
         username: BadelhaDocker
-        password: ${{ secrets.AZURE_ACR_PASSWORD }}
+        password: wEVH1Pk7gCsxwpxmw/8cxtlZQLr4lAvxMFsMJH2a5z+ACRBsuCtW
 
         
 
     - name: Build Docker Image
       run: |
-        docker build -t ${{ secrets.AZURE_ACR_LOGIN_SERVER }}/${{ secrets.DOCKER_IMAGE_NAME }}:${{ github.sha }} .
+        docker build -t badelhadocker.azurecr.io/hellodocker1 .
         
     - name: Push Docker Image to Azure Container Registry
       run: |
-        docker push ${{ secrets.AZURE_ACR_LOGIN_SERVER }}/${{ secrets.DOCKER_IMAGE_NAME }}:${{ github.sha }}
+        docker push  push badelhadocker.azurecr.io/hellodocker1

@@ -84,11 +84,7 @@
                         <ul>
                             <li class="active"><a href="{{ url_for('index') }}">Home</a></li>
                             <li><a href="{{ url_for('product_main') }}">Shop</a>
-                                <ul class="dropdown">
-                                    <li><a href="#">Women’s</a></li>
-                                    <li><a href="#">Men’s</a></li>
-                                    <li><a href="./shop.html">Kid's</a></li>
-                                </ul>
+                            
                             </li>
                             <li><a href="{{ url_for('contact') }}">Contact</a></li>
                         </ul>
@@ -170,8 +166,8 @@
             <div class="col-lg-4 col-md-4 col-sm-4" data-aos="slide-top" data-aos-delay="500">
                 <div class="footer__newslatter">
                     <h6 style="color: #000000;">Subscribe</h6>
-                    <form action="#">
-                        <input type="text" placeholder="Email">
+                    <form action="{{ url_for('subscribe') }}" method="post">
+                        <input type="email" name="email" placeholder="Enter your email...">
                         <button type="submit" class="site-btn">Subscribe</button>
                     </form>
                     <div class="footer__social">

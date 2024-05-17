@@ -2,7 +2,7 @@
 #Importing required libraries
 ################################
 from flask import Flask, render_template, url_for, redirect, request, flash, session
-from models import db, User, PromoCode, ContactMessage, Item, Cart, Order
+from models import db, User, PromoCode, ContactMessage, Item, Cart, Order, Subscription
 from werkzeug.security import check_password_hash
 from config import Config
 from sqlalchemy.exc import IntegrityError
@@ -478,6 +478,29 @@ def search():
             return render_template('search_results.html')
         return redirect(request.referrer or url_for('index'))
 
+
+#Subscribe
+@app.route('/basic',methods=['POST'])
+def subscribe():
+    if request.method == 'POST':
+        email = request.form.get('email')
+
+        # Check if the email is already subscribed
+        existing_subscription = Subscription.query.filter_by(user_email=email).first()
+        if existing_subscription:
+            flash('You are already subscribed!')
+        else:
+         
+            new_subscription = Subscription(user_email=email)
+
+            # Add the new subscription to the database
+            db.session.add(new_subscription)
+            db.session.commit()
+
+            flash('You have been successfully subscribed!')
+
+        # Redirect to the appropriate page after subscription
+        return redirect(url_for('index'))
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)

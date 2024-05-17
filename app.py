@@ -346,7 +346,7 @@ def order_summary():
     return render_template('OrderTracking.html')
 
 #Login
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/Login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         email = request.form['email']
@@ -361,9 +361,9 @@ def login():
             return redirect(url_for('index'))  
         else:
             # Invalid credentials
-            return render_template('login.html', error='Invalid credentials')
+            return render_template('Login.html', error='Invalid credentials')
 
-    return render_template('login.html')
+    return render_template('Login.html')
 
 # Logout
 @app.route('/logout')
@@ -480,4 +480,5 @@ def search():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000)
+    

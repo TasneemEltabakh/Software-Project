@@ -1,0 +1,35 @@
+name: Python CI/CD. # Name of the Pipeline
+on: # Define events that we listen to
+  push:
+    branches: [ main ]
+
+
+jobs: # Define list of actions to happen
+  build:
+    runs-on: ubuntu-latest # OS that action runs on
+    steps:
+    - uses: actions/checkout@v4. # Triggerning external action
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+    - name: Install dependencies
+      run: |
+        python -m pip install -upgrade pip
+        pip install -r requirements.txt
+    - name: Run tests
+      run: |
+        python -m pytest tests/
+  deploy:
+    needs: build # Build step should be done first
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Deploy to Staging
+      env:
+        STAGING_HOST: ${{ secrets.STAGING_HOST }}
+        STAGING_USER: ${{ secrets.STAGING_USER }}
+        STAGING_PASSWORD: ${{ secrets.STAGING_PASSWORD }}
+      run: |
+        # Deploy to staging server
+        ssh $STAGING_USER@$STAGING_HOST './deploy.sh'

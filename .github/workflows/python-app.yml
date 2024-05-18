@@ -53,5 +53,5 @@ jobs:
     - name: Push Docker Image to Azure Container Registry
     
       run: |
-        docker push badelhadocker.azurecr.io/hellodocker2:latest .
+        docker push badelhadocker.azurecr.io/hellodocker2:latest
 

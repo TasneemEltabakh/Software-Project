@@ -29,6 +29,13 @@ jobs:
       - name: Convert username to lowercase
         id: lowercase_username
         run: echo "username=$(echo ${{ secrets.AzureAppService_ContainerUsername_31f7194006c54207a5795dbed1a43c8a }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
+      - name: Run tests
+        env:
+          DISPLAY: :99.0
+        run: |
+          sudo Xvfb :99 -ac &
+          pytest tests/
         
       - name: Build and push container image to registry
         uses: docker/build-push-action@v3

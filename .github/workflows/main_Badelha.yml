@@ -97,7 +97,7 @@ jobs:
             -Dsonar.projectKey=tasneemeltabakh \
             -Dsonar.sources=. \
             -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.login=${{ secrets.SONARQUBE_TOKEN }}
+            -Dsonar.login=3744cffbd33976e3781aad62e6523b7609263d1b
 
       - name: Upload SonarQube analysis report
         uses: actions/upload-artifact@v2

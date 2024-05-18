@@ -39,7 +39,7 @@ jobs:
     - name: Docker Login
       uses: azure/docker-login@v1
       with:
-        registry: BadelhaDocker
+        login-server:: badelhadocker.azurecr.io
         username: BadelhaDocker
         password: "wEVH1Pk7gCsxwpxmw/8cxtlZQLr4lAvxMFsMJH2a5z+ACRBsuCtW"
 
@@ -54,5 +54,5 @@ jobs:
         build-args: |
           version=${{ steps.tag.outputs.tag }}
         tags: >
-          BadelhaDocker/hellodocker2:${{ steps.tag.outputs.tag }},
-          BadelhaDocker/hellodocker2-api:latest
+          badelhadocker.azurecr.io/hellodocker2:${{ steps.tag.outputs.tag }},
+          badelhadocker.azurecr.io/hellodocker2:latest

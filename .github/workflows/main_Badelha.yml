@@ -28,13 +28,13 @@ jobs:
 
     - name: Convert username to lowercase
       id: lowercase_username
-      run: echo "::set-output name=username::$(echo ${{ secrets.AzureAppService_ContainerUsername_c47db9c0cb1f4752855ebe0e0114bb31 }} | tr '[:upper:]' '[:lower:]')"
-      
+      run: echo "username=$(echo ${{ secrets.AzureAppService_ContainerUsername_31f7194006c54207a5795dbed1a43c8a }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
     - name: Build and push container image to registry
       uses: docker/build-push-action@v3
       with:
         push: true
-        tags: badelhadocker.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_31f7194006c54207a5795dbed1a43c8a }}/hellodocker2:${{ github.sha }}
+        tags: badelhadocker.azurecr.io/${{ env.username }}/hellodocker2:${{ github.sha }}
         file: ./Dockerfile
 
   deploy:
@@ -45,6 +45,10 @@ jobs:
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
+    - name: Convert username to lowercase
+      id: lowercase_username
+      run: echo "username=$(echo ${{ secrets.AzureAppService_ContainerUsername_31f7194006c54207a5795dbed1a43c8a }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
     - name: Deploy to Azure Web App
       id: deploy-to-webapp
       uses: azure/webapps-deploy@v2
@@ -52,4 +56,4 @@ jobs:
         app-name: 'Badelha'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_03d5f8a8d7f64c9f8ee43fda282bdc0c }}
-        images: 'badelhadocker.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_31f7194006c54207a5795dbed1a43c8a }}/hellodocker2:${{ github.sha }}'
+        images: 'badelhadocker.azurecr.io/${{ env.username }}/hellodocker2:${{ github.sha }}'

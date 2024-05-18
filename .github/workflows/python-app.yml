@@ -39,7 +39,7 @@ jobs:
       with:
         login-server: badelhadocker.azurecr.io
         username: BadelhaDocker
-        password: ${{ secrets.ACR_PASSWORD }}
+        password: wEVH1Pk7gCsxwpxmw/8cxtlZQLr4lAvxMFsMJH2a5z+ACRBsuCtW
 
     - name: Build Docker Image
       run: |

@@ -94,9 +94,9 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
         run: |
           sonar-scanner \
-            -Dsonar.projectKey=your_project_key \
+            -Dsonar.projectKey=tasneemeltabakh \
             -Dsonar.sources=. \
-            -Dsonar.host.url=https://your-sonarqube-server-url \
+            -Dsonar.host.url=https://https://sonarcloud.io \
             -Dsonar.login=${{ secrets.SONARQUBE_TOKEN }}
 
       - name: Upload SonarQube analysis report

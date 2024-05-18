@@ -87,17 +87,17 @@ jobs:
           curl -sSLo sonarqube.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
           unzip sonarqube.zip -d $HOME
           mv $HOME/sonar-scanner-4.6.2.2472-linux $HOME/sonar-scanner
-          export PATH=$HOME/sonar-scanner/bin:$PATH
+          echo "export PATH=$HOME/sonar-scanner/bin:\$PATH" >> $GITHUB_ENV
 
       - name: Run SonarQube analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
         run: |
           sonar-scanner \
-          -Dsonar.projectKey=your_project_key \
-          -Dsonar.sources=. \
-          -Dsonar.host.url=https://your-sonarqube-server-url \
-          -Dsonar.login=${{ secrets.SONARQUBE_TOKEN }}
+            -Dsonar.projectKey=your_project_key \
+            -Dsonar.sources=. \
+            -Dsonar.host.url=https://your-sonarqube-server-url \
+            -Dsonar.login=${{ secrets.SONARQUBE_TOKEN }}
 
       - name: Upload SonarQube analysis report
         uses: actions/upload-artifact@v2

@@ -9,6 +9,9 @@ on:
     branches: [ "main" ]
   workflow_dispatch:
 
+env:
+  IMAGE_NAME: hellodocker2
+  
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -36,7 +39,7 @@ jobs:
     - name: Docker Login
       uses: azure/docker-login@v1
       with:
-        login-server: badelhadocker.azurecr.io
+        registry: BadelhaDocker
         username: BadelhaDocker
         password: "wEVH1Pk7gCsxwpxmw/8cxtlZQLr4lAvxMFsMJH2a5z+ACRBsuCtW"
 
@@ -51,5 +54,5 @@ jobs:
         build-args: |
           version=${{ steps.tag.outputs.tag }}
         tags: >
-          badelhadocker.azurecr.io/departments-api:${{ steps.tag.outputs.tag }},
-          badelhadocker.azurecr.io/departments-api:latest
+          BadelhaDocker/hellodocker2:${{ steps.tag.outputs.tag }},
+          BadelhaDocker/hellodocker2-api:latest

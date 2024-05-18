@@ -84,11 +84,9 @@ jobs:
 
       - name: Install SonarQube scanner
         run: |
-          curl -sSLo sonarqube.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
-          unzip sonarqube.zip -d $HOME
-          mv $HOME/sonar-scanner-4.6.2.2472-linux $HOME/sonar-scanner
-          echo "export PATH=$HOME/sonar-scanner/bin:\$PATH" >> $HOME/.bashrc
-          source $HOME/.bashrc
+           curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
+           unzip sonar-scanner.zip
+           export PATH=$PATH:$(pwd)/sonar-scanner/bin
           
       - name: Run SonarQube analysis
         env:

@@ -2,7 +2,9 @@ name: Build and Deploy
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - "main"
+      - "refs/tags/*" # Listen to tag pushes as well
   pull_request:
     branches: [ "main" ]
   workflow_dispatch:
@@ -40,7 +42,7 @@ jobs:
 
     - name: Get tag
       id: tag
-      uses: dawidd6/action-get-tag@v1
+      run: echo "::set-output name=tag::${GITHUB_REF#refs/tags/}" # Extract tag from GITHUB_REF
 
     - name: Build & Push Docker Image
       uses: docker/build-push-action@v2

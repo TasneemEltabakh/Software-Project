@@ -175,7 +175,7 @@ def cart():
             #get the entered promocode
             promo_code = request.form.get('promo_code')
             promo = PromoCode.get_by_code(promo_code)
-            #if this is a valid promocode
+            #if this is a valid promocodes
             if promo:
                 session['promo_code'] = promo.code
                 flash('Promo code applied successfully!')

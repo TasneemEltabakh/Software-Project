@@ -54,6 +54,6 @@ jobs:
         build-args: |
           version=${{ steps.tag.outputs.tag }}
         tags: >
-          badelhadocker.azurecr.io/***/hellodocker2:${{ steps.tag.outputs.tag | lowercase }},
+          badelhadocker.azurecr.io/***/hellodocker2:${{ steps.tag.outputs.tag}},
           badelhadocker.azurecr.io/***/hellodocker2:latest
 

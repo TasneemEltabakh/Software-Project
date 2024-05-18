@@ -87,7 +87,8 @@ jobs:
           curl -sSLo sonarqube.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
           unzip sonarqube.zip -d $HOME
           mv $HOME/sonar-scanner-4.6.2.2472-linux $HOME/sonar-scanner
-          echo "export PATH=$HOME/sonar-scanner/bin:\$PATH" >> $GITHUB_ENV
+          echo "export PATH=$HOME/sonar-scanner/bin:\$PATH" >> $HOME/.bashrc
+          source $HOME/.bashrc
 
       - name: Run SonarQube analysis
         env:

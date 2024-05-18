@@ -45,4 +45,4 @@ jobs:
         app-name: 'Badelha'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_b44545e444384eb08445ac3a439f36cb }}
-        images: 'badelhadocker.azurecr.io/***/hellodocker2:${{ github.sha | lowercase }}'
+        images: 'badelhadocker.azurecr.io/***/hellodocker2:${{ github.sha}}'

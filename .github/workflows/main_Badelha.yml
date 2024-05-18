@@ -89,14 +89,16 @@ jobs:
           mv $HOME/sonar-scanner-4.6.2.2472-linux $HOME/sonar-scanner
           echo "export PATH=$HOME/sonar-scanner/bin:\$PATH" >> $HOME/.bashrc
           source $HOME/.bashrc
-
-      - name: Run SonarCloud analysis
+          
+      - name: Run SonarQube analysis
         env:
-          SONAR_TOKEN: 3744cffbd33976e3781aad62e6523b7609263d1b
-        run: sonar-scanner \
-             -Dsonar.projectKey=tasneemeltabakh \
-             -Dsonar.sources=. \
-             -Dsonar.host.url=https://sonarcloud.io
+          SONAR_TOKEN: d8b304832521e8fe9b8f60c9ad11a89f21f7d622
+        run: |
+          sonar-scanner \
+            -Dsonar.projectKey= tasneemeltabakh \
+            -Dsonar.sources=. \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.login=d8b304832521e8fe9b8f60c9ad11a89f21f7d622
 
       - name: Upload SonarQube analysis report
         uses: actions/upload-artifact@v2

@@ -152,6 +152,7 @@ def contact():
 #Cart#
 @app.route('/shop-cart', methods=['GET', 'POST'])
 def cart():
+    session['promo_code'] = 0
     #if any button is pressed
     if request.method == 'POST':
         #if this button was for delete

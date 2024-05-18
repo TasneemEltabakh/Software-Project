@@ -2,7 +2,7 @@
 #Importing required libraries
 ################################
 from flask import Flask, render_template, url_for, redirect, request, flash, session
-from models import db, User, PromoCode, ContactMessage, Item, Cart, Order
+from models import db, User, PromoCode, ContactMessage, Item, Cart, Order, Subscription
 from werkzeug.security import check_password_hash
 from config import Config
 from sqlalchemy.exc import IntegrityError
@@ -13,7 +13,7 @@ from datetime import datetime
 #Design Patterns templates 
 ###################################################
 #1.Singlton 
-app = Flask(__name__) #application instance.
+app = Flask(__name__, static_url_path='/static', static_folder='static')#application instance.
 
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 app.config.from_object(Config)
@@ -176,7 +176,7 @@ def cart():
             #get the entered promocode
             promo_code = request.form.get('promo_code')
             promo = PromoCode.get_by_code(promo_code)
-            #if this is a valid promocode
+            #if this is a valid promocodes
             if promo:
                 session['promo_code'] = promo.code
                 flash('Promo code applied successfully!')
@@ -479,6 +479,29 @@ def search():
             return render_template('search_results.html')
         return redirect(request.referrer or url_for('index'))
 
+
+#Subscribe
+@app.route('/subscribtion',methods=['POST'])
+def subscribe():
+    if request.method == 'POST':
+        email = request.form.get('email1')
+
+        # Check if the email is already subscribed
+        existing_subscription = Subscription.query.filter_by(user_email=email).first()
+        if existing_subscription:
+            flash('You are already subscribed!')
+        else:
+         
+            new_subscription = Subscription(user_email=email)
+
+            # Add the new subscription to the database
+            db.session.add(new_subscription)
+            db.session.commit()
+
+            flash('You have been successfully subscribed!')
+
+        # Redirect to the appropriate page after subscription
+    return render_template('index.html')
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)

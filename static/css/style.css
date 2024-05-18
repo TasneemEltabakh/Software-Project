@@ -1254,8 +1254,9 @@ ol {
 }
 
 .product__item {
-	margin-bottom: 35px;
+	margin-bottom: 0; /* or adjust the value as needed */
 }
+
 
 .product__item:hover .product__hover li {
 	opacity: 1;
@@ -1269,13 +1270,11 @@ ol {
 .product__item.sale .product__item__text .product__price {
 	color: #12fb25;
 }
-
 .product__item__pic {
-	height: 360px;
-	position: relative;
-	overflow: hidden;
+    height: 500px; /* Adjust the value as needed */
+    position: relative;
+    overflow: hidden;
 }
-
 .product__item__pic .label {
 	font-size: 12px;
 	color: #ffffff;

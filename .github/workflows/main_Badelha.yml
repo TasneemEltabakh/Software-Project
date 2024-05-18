@@ -90,15 +90,13 @@ jobs:
           echo "export PATH=$HOME/sonar-scanner/bin:\$PATH" >> $HOME/.bashrc
           source $HOME/.bashrc
 
-      - name: Run SonarQube analysis
+      - name: Run SonarCloud analysis
         env:
-          SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
-        run: |
-          sonar-scanner \
-            -Dsonar.projectKey=tasneemeltabakh \
-            -Dsonar.sources=. \
-            -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.login=3744cffbd33976e3781aad62e6523b7609263d1b
+          SONAR_TOKEN: 3744cffbd33976e3781aad62e6523b7609263d1b
+        run: sonar-scanner \
+             -Dsonar.projectKey=tasneemeltabakh \
+             -Dsonar.sources=. \
+             -Dsonar.host.url=https://sonarcloud.io
 
       - name: Upload SonarQube analysis report
         uses: actions/upload-artifact@v2

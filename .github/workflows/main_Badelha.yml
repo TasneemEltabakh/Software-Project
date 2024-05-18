@@ -23,14 +23,14 @@ jobs:
       uses: docker/login-action@v2
       with:
         registry: https://badelhadocker.azurecr.io/
-        username: ${{ secrets.AzureAppService_ContainerUsername_f1c82b82b7d9468d82120d28b8f3e2ea }}
-        password: ${{ secrets.AzureAppService_ContainerPassword_6ede8ca5401845659eaa6169f67f1096 }}
+        username: ${{ secrets.AzureAppService_ContainerUsername_31f7194006c54207a5795dbed1a43c8a }}
+        password: ${{ secrets.AzureAppService_ContainerPassword_e3b35e7a6fcc4aa7890cfe3094019db3 }}
 
     - name: Build and push container image to registry
       uses: docker/build-push-action@v3
       with:
         push: true
-        tags: badelhadocker.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_f1c82b82b7d9468d82120d28b8f3e2ea }}/hellodocker2:${{ github.sha }}
+        tags: badelhadocker.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_31f7194006c54207a5795dbed1a43c8a }}/hellodocker2:${{ github.sha }}
         file: ./Dockerfile
 
   deploy:
@@ -47,5 +47,5 @@ jobs:
       with:
         app-name: 'Badelha'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_efe4e254f81942cf8a648898145a214c }}
-        images: 'badelhadocker.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_f1c82b82b7d9468d82120d28b8f3e2ea }}/hellodocker2:${{ github.sha }}'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_03d5f8a8d7f64c9f8ee43fda282bdc0c }}
+        images: 'badelhadocker.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_31f7194006c54207a5795dbed1a43c8a }}/hellodocker2:${{ github.sha }}'

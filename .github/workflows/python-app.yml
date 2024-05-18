@@ -50,11 +50,6 @@ jobs:
         push: true
         build-args: |
           version=${{ steps.tag.outputs.tag }}
-        tags: "badelhadocker.azurecr.io/departments-api:${{ steps.tag.outputs.tag }}"
-
-    - name: Docker Update
-      run: |
-        docker login -u "BadelhaDocker" -p "wEVH1Pk7gCsxwpxmw/8cxtlZQLr4lAvxMFsMJH2a5z+ACRBsuCtW" "badelhadocker.azurecr.io"
-        docker pull "badelhadocker.azurecr.io/departments-api:${{ steps.tag.outputs.tag }}"
-        docker tag "badelhadocker.azurecr.io/departments-api:${{ steps.tag.outputs.tag }}" "badelhadocker.azurecr.io/departments-api:latest"
-        docker push "badelhadocker.azurecr.io/departments-api:latest"
+        tags: >
+          badelhadocker.azurecr.io/departments-api:${{ steps.tag.outputs.tag }}
+          badelhadocker.azurecr.io/departments-api:latest # Set default tag for branch pushes

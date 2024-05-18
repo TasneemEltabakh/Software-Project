@@ -11,12 +11,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        shell: bash
-
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
     - name: Set up Python 3.12
       uses: actions/setup-python@v3
@@ -39,27 +36,23 @@ jobs:
       with:
         login-server: badelhadocker.azurecr.io
         username: BadelhaDocker
-        password: wEVH1Pk7gCsxwpxmw/8cxtlZQLr4lAvxMFsMJH2a5z+ACRBsuCtW
+        password: "wEVH1Pk7gCsxwpxmw/8cxtlZQLr4lAvxMFsMJH2a5z+ACRBsuCtW"
 
-    - name: Build Docker Image
-      run: |
-        docker build -t badelhadocker.azurecr.io/hellodocker2:${{ github.sha }} .
+    - name: Get tag
+      id: tag
+      uses: dawidd6/action-get-tag@v1
 
-    - name: Push Docker Image to Azure Container Registry
-      run: |
-        docker push badelhadocker.azurecr.io/hellodocker2:${{ github.sha }}
-
-    - name: Set up kubectl
-      uses: azure/setup-kubectl@v1
+    - name: Build & Push Docker Image
+      uses: docker/build-push-action@v2
       with:
-        version: 'v1.28.9'
+        push: true
+        build-args: |
+          version=${{ steps.tag.outputs.tag }}
+        tags: "badelhadocker.azurecr.io/departments-api:${{ steps.tag.outputs.tag }}"
 
-    - name: Get AKS credentials
+    - name: Docker Update
       run: |
-        az login --service-principal -u 272105d5-0143-49f6-9695-793aef856e6d -p thW8Q~wLCnecgH1dAr1uSRTvCA_AKB-jLwkM0aPV --tenant bded4dcc-cc45-4b9a-bda4-b1430f6c7f6f
-        az aks get-credentials --resource-group 202101031_rg_4516 --name myAKSCluster
-
-    - name: Deploy to AKS
-      run: |
-        sed -i 's|image: badelhadocker.azurecr.io/hellodocker2:latest|image: badelhadocker.azurecr.io/hellodocker2:${{ github.sha }}|' deployment.yaml
-        kubectl apply -f deployment.yaml
+        docker login -u "BadelhaDocker" -p "wEVH1Pk7gCsxwpxmw/8cxtlZQLr4lAvxMFsMJH2a5z+ACRBsuCtW" "badelhadocker.azurecr.io"
+        docker pull "badelhadocker.azurecr.io/departments-api:${{ steps.tag.outputs.tag }}"
+        docker tag "badelhadocker.azurecr.io/departments-api:${{ steps.tag.outputs.tag }}" "badelhadocker.azurecr.io/departments-api:latest"
+        docker push "badelhadocker.azurecr.io/departments-api:latest"

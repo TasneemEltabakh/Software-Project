@@ -1,4 +1,4 @@
-name: Build
+name: Build and Deploy
 
 on:
   push:
@@ -28,37 +28,37 @@ jobs:
         python -m pip install --upgrade pip
         pip install flake8 pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    
+
     - name: Lint with flake8
       run: |
-        # Stop the build if there are Python syntax errors or undefined names
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # Exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    
+
     - name: Docker Login
       uses: azure/docker-login@v1
       with:
         login-server: badelhadocker.azurecr.io
         username: BadelhaDocker
-        password: wEVH1Pk7gCsxwpxmw/8cxtlZQLr4lAvxMFsMJH2a5z+ACRBsuCtW
+        password: ${{ secrets.ACR_PASSWORD }}
 
     - name: Build Docker Image
       run: |
-        IMAGE_TAG=${{ github.sha }}
-        docker build -t badelhadocker.azurecr.io/hellodocker2:${IMAGE_TAG} .
-        
+        docker build -t badelhadocker.azurecr.io/hellodocker2:${{ github.sha }} .
+
     - name: Push Docker Image to Azure Container Registry
       run: |
-        IMAGE_TAG=${{ github.sha }}
-        docker push badelhadocker.azurecr.io/hellodocker2:${IMAGE_TAG}
+        docker push badelhadocker.azurecr.io/hellodocker2:${{ github.sha }}
 
     - name: Set up kubectl
-      run: |
-        az aks get-credentials --resource-group YOUR_RESOURCE_GROUP --name YOUR_AKS_CLUSTER
-        echo "KUBECONFIG is $KUBECONFIG"
+      uses: azure/setup-kubectl@v1
+      with:
+        version: 'v1.28.9'
 
-    - name: Deploy to Kubernetes
+    - name: Get AKS credentials
       run: |
-        IMAGE_TAG=${{ github.sha }}
-        kubectl set image deployment/hellodocker2-deployment hellodocker2=badelhadocker.azurecr.io/hellodocker2:${IMAGE_TAG}
+        az aks get-credentials --resource-group 202101031_rg_4516 --name myAKSCluster
+
+    - name: Deploy to AKS
+      run: |
+        sed -i 's|image: badelhadocker.azurecr.io/hellodocker2:latest|image: badelhadocker.azurecr.io/hellodocker2:${{ github.sha }}|' deployment.yaml
+        kubectl apply -f deployment.yaml

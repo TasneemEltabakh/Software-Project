@@ -28,7 +28,8 @@ jobs:
       with:
         push: true
         tags: >
-          badelhadocker.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_f5e38be0e8b04bf4a9653547856802de }}/hellodocker2:${{ github.sha | lowercase }}
+          badelhadocker.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_f5e38be0e8b04bf4a9653547856802de }}/hellodocker2:${{ github.sha }}
+            | lowercase
         file: ./Dockerfile
 
   deploy:
@@ -46,4 +47,6 @@ jobs:
         app-name: 'Badelha'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_b44545e444384eb08445ac3a439f36cb }}
-        images: 'badelhadocker.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_f5e38be0e8b04bf4a9653547856802de }}/hellodocker2:${{ github.sha | lowercase }}'
+        images: >
+          badelhadocker.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_f5e38be0e8b04bf4a9653547856802de }}/hellodocker2:${{ github.sha }}
+            | lowercase

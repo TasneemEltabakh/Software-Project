@@ -56,6 +56,7 @@ jobs:
 
     - name: Get AKS credentials
       run: |
+        az login --service-principal -u 272105d5-0143-49f6-9695-793aef856e6d -p thW8Q~wLCnecgH1dAr1uSRTvCA_AKB-jLwkM0aPV --tenant bded4dcc-cc45-4b9a-bda4-b1430f6c7f6f
         az aks get-credentials --resource-group 202101031_rg_4516 --name myAKSCluster
 
     - name: Deploy to AKS

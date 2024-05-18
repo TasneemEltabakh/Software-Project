@@ -26,6 +26,10 @@ jobs:
         username: ${{ secrets.AzureAppService_ContainerUsername_31f7194006c54207a5795dbed1a43c8a }}
         password: ${{ secrets.AzureAppService_ContainerPassword_e3b35e7a6fcc4aa7890cfe3094019db3 }}
 
+    - name: Convert username to lowercase
+      id: lowercase_username
+      run: echo "::set-output name=username::$(echo ${{ secrets.AzureAppService_ContainerUsername_c47db9c0cb1f4752855ebe0e0114bb31 }} | tr '[:upper:]' '[:lower:]')"
+      
     - name: Build and push container image to registry
       uses: docker/build-push-action@v3
       with:

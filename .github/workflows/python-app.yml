@@ -43,15 +43,22 @@ jobs:
         username: BadelhaDocker
         password: wEVH1Pk7gCsxwpxmw/8cxtlZQLr4lAvxMFsMJH2a5z+ACRBsuCtW
 
-        
-
     - name: Build Docker Image
       run: |
-        docker build -t badelhadocker.azurecr.io/hellodocker2 .
-        
+        IMAGE_TAG=${{ github.sha }}
+        docker build -t badelhadocker.azurecr.io/hellodocker2:${IMAGE_TAG} .
         
     - name: Push Docker Image to Azure Container Registry
-    
       run: |
-        docker push badelhadocker.azurecr.io/hellodocker2
+        IMAGE_TAG=${{ github.sha }}
+        docker push badelhadocker.azurecr.io/hellodocker2:${IMAGE_TAG}
 
+    - name: Set up kubectl
+      run: |
+        az aks get-credentials --resource-group YOUR_RESOURCE_GROUP --name YOUR_AKS_CLUSTER
+        echo "KUBECONFIG is $KUBECONFIG"
+
+    - name: Deploy to Kubernetes
+      run: |
+        IMAGE_TAG=${{ github.sha }}
+        kubectl set image deployment/hellodocker2-deployment hellodocker2=badelhadocker.azurecr.io/hellodocker2:${IMAGE_TAG}

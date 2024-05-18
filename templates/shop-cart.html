@@ -112,7 +112,7 @@
                                 <li>Total <span>$ {{ total_price }}</span></li>
 
                          
-                            <li>Total <span name="total_price">$ {{ total_price + (0.14* total_price)}}</span></li>
+                            <li>Total <span id="total_price" name="total_price">$ {{ total_price + (0.14* total_price)}}</span></li>
                         </ul>
                         <a href="{{ url_for('checkout', total_price=total_price + (0.14* total_price)) }}" class="primary-btn">Proceed to checkout</a>
                     </div>

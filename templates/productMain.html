@@ -48,7 +48,7 @@
                             <br><br>
                             <form action="{{url_for('product_main') }}" method="POST">
                                 <input type="hidden" name="item_id" value="{{item.id}}">
-                                <button type="submit" class="site-btn">add to cart</button>
+                                <button  id="add-to-cart-btn" type="submit" class="site-btn">add to cart</button>
                                 <a href="tel:{{user_phone_numbers[item.id] }}" class="site-btn">Call</a>
                             </form>
                             

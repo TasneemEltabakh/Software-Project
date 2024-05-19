@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up .NET Core
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.x'
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18.x'
+
+    - name: Install dependencies
+      run: |
+        dotnet restore src/InsightGlassTest/InsightGlassTest.sln
+        cd src/InsightGlassTest/insightglasstest.client
+        npm install
+        cd ../../..
+
+    - name: Build the project
+      run: dotnet build src/InsightGlassTest/InsightGlassTest.sln --configuration Release
+
+    - name: Run tests
+      env:
+        MYSQLCONNSTR_DBLiveConn: ${{ secrets.DBLiveConn }}
+      run: dotnet test src/InsightGlassTest/InsightGlassTest.sln

@@ -186,7 +186,7 @@ def cart():
     # Handle GET request as before
     user_id = session.get('user_id')
     if user_id:
-        # this is for showing all the products you put in the cart  
+        # this is for showing all the products you put in the cart to ensure 
         cart_items = Cart.query.filter_by(user_id=user_id).all()
         cart_items_count = len(cart_items)
         #this item counts for the header icon

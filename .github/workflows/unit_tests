@@ -42,5 +42,5 @@ jobs:
 
     - name: Run tests
       env:
-        MYSQLCONNSTR_DBLiveConn: ${{ secrets.DBLiveConn }}
+        MYSQLCONNSTR_DBLiveConn: 'mysql+pymysql://Pinkode:Rn2T2021@myserverdb1.mysql.database.azure.com/badelha1'
       run: dotnet test src/InsightGlassTest/InsightGlassTest.sln

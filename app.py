@@ -54,7 +54,7 @@ class DiscountCheckoutStrategy(CheckoutStrategy):
         discounted_price = total_price - discount_amount
         return discounted_price
 
-#################################
+##################################
 #Helping Functions
 #################################
 def get_current_user():
